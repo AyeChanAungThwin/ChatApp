@@ -21,21 +21,18 @@ public class TypingThread extends Thread {
 		// TODO Auto-generated method stub
 		try {
 			typing = true;
-			try {
-				PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
-				out.println("Server is typing!!!");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//observer.setTypingStatus("typing");
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
+			
+			PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
+			out.println("Server is typing!!!");
+			
+			Thread.sleep(1500);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally {
 			typing = false;
+			
 			try {
 				PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 				out.println("Waiting for server reply...");
@@ -43,7 +40,6 @@ public class TypingThread extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//observer.setTypingStatus("");
 		}
 	}
 }

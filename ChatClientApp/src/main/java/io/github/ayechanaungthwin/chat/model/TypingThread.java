@@ -3,8 +3,11 @@ package io.github.ayechanaungthwin.chat.model;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class TypingThread extends Thread {
 	
+	private final ObjectMapper mapper = new ObjectMapper();
 	public static boolean typing;
 	private Socket socket;
 	
@@ -23,7 +26,8 @@ public class TypingThread extends Thread {
 			typing = true;
 			
 			PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
-			out.println("Client is typing!!!");
+			String jsonString = mapper.writeValueAsString(new Dto("Client", "typing"));
+			out.println(jsonString);
 			
 			Thread.sleep(1500);
 		} catch (Exception e) {
@@ -35,7 +39,8 @@ public class TypingThread extends Thread {
 			
 			try {
 				PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-				out.println("Waiting for client reply...");
+				String jsonString = mapper.writeValueAsString(new Dto("Client", "idle"));
+				out.println(jsonString);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

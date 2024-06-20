@@ -7,6 +7,9 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.github.ayechanaungthwin.chat.model.Dto;
 import io.github.ayechanaungthwin.chat.model.Server;
 import io.github.ayechanaungthwin.chat.model.TypingThread;
 import javafx.application.Platform;
@@ -18,6 +21,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -25,8 +30,11 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class ServerController implements Initializable {
+	
+	private final ObjectMapper mapper = new ObjectMapper();
 	
 	@FXML
     private Button btn;
@@ -38,6 +46,9 @@ public class ServerController implements Initializable {
     private VBox vBox;
 	
 	@FXML
+    private ImageView imageView;
+	
+	@FXML
     private Label status;
 	
 	@FXML
@@ -47,6 +58,7 @@ public class ServerController implements Initializable {
 	private Socket soc;
 	
 	public ServerController() {
+		//7imageView.setImage(new Image(this.getClass().getResource("/images/typing.gif").toExternalForm()));
 		new Thread(() -> {
 			try {
 				server = new Server(7777);
@@ -70,9 +82,17 @@ public class ServerController implements Initializable {
 					if (text.contains("EnTeR834")) {
 						text = text.replaceAll("@EnTeR834", "");
 						addLabelToVBox(text, true); 
+						removeHBoxById("typing-gif");
 					}
 					else {
-						setStatus(text);
+						//setStatus(text);
+						Dto dto = mapper.readValue(text, Dto.class);
+						if (dto.getMessage().equals("typing")) {
+							showTypingGif(dto.getName());
+						}
+						else {
+							removeHBoxById("typing-gif");
+						}
 					}
 				}
 			} catch (Exception e) {
@@ -81,6 +101,35 @@ public class ServerController implements Initializable {
 			}
 		}).start();
 	}
+	
+	public void showTypingGif(String socketEndName) {
+		Platform.runLater(() -> {
+			Label label = new Label();
+			label.setText(socketEndName+" is typing : ");
+			label.setFont(new Font(10));
+			label.setMaxHeight(20);
+			
+			ImageView img = new ImageView();
+			img.setFitWidth(25);
+			img.setFitHeight(25);
+			img.setImage(new Image(this.getClass().getResource("/images/typing.gif").toExternalForm()));
+			
+			HBox hBox=new HBox();
+			hBox.setId("typing-gif");
+	        hBox.getChildren().addAll(label, img);
+	        hBox.setAlignment(Pos.BASELINE_LEFT);
+	        hBox.setPadding(new Insets(0, 0, 0, 0));
+	        
+			vBox.getChildren().add(hBox);
+		});
+	}
+	
+	// Method to remove HBox by ID
+    private void removeHBoxById(String id) {
+        Platform.runLater(() -> {
+        	vBox.getChildren().removeIf(node -> node instanceof HBox && id.equals(node.getId()));
+        });
+    }
 	
 	private void setStatus(String text) {
 		Platform.runLater(() -> {
@@ -135,14 +184,15 @@ public class ServerController implements Initializable {
 
 		textInput.setOnKeyPressed( event -> {
 			//System.out.println(textInput.getText().toString());
+			if( event.getCode() == KeyCode.ENTER ) {
+			    onSendBtnPressed();
+			    return;
+			}
+			
 			if (!TypingThread.typing) {
 				TypingThread tpT = new TypingThread();
 				tpT.setSocket(soc);
 				tpT.start();
-			}
-			
-			if( event.getCode() == KeyCode.ENTER ) {
-			    onSendBtnPressed();
 			}
 		});
 	}

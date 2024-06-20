@@ -16,7 +16,12 @@ public class Client {
 		return soc;
 	}
 	
-	public void close() throws IOException {
-		soc.close();
+	public void close() {
+		try {
+			soc.close();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

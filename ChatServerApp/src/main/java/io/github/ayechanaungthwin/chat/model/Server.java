@@ -5,8 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-
-	public static int ServerPort = 5020;
 	
 	private ServerSocket svrSoc = null;
 	private Socket soc = null;
@@ -15,12 +13,21 @@ public class Server {
 		svrSoc = new ServerSocket(port);
 	}
 	
+	public void setSocket(Socket soc) {
+		this.soc = soc;
+	}
+	
 	public ServerSocket getServerSocket() {
 		return svrSoc;
 	}
 	
-	public void close() throws IOException {
-		soc.close();
-		svrSoc.close();
+	public void close() {
+		try {
+			soc.close();
+			svrSoc.close();
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

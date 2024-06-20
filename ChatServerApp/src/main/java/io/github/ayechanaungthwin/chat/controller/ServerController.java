@@ -1,7 +1,6 @@
 package io.github.ayechanaungthwin.chat.controller;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -9,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import io.github.ayechanaungthwin.chat.model.Server;
+import io.github.ayechanaungthwin.chat.model.TypingThread;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,7 +27,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class ServerController implements Initializable {
-
+	
 	@FXML
     private Button btn;
 	
@@ -46,56 +46,66 @@ public class ServerController implements Initializable {
 	private Server server;
 	private Socket soc;
 	
-	public ServerController() throws IOException {
+	public ServerController() {
 		new Thread(() -> {
 			try {
 				server = new Server(7777);
-				Platform.runLater(new Runnable() {
-		            @Override
-		            public void run() {
-		            	status.setText("Waiting for client...");
-		            }
-		        });  
+				setStatus("Waiting for client...");
+				  
 				soc = server.getServerSocket().accept();
-				Platform.runLater(new Runnable() {
-		            @Override
-		            public void run() {
-		            	status.setText("Client is connected...");
-		            }
-		        });
+				server.setSocket(soc);
+				setStatus("Client is connected...");
 				
 				while(soc.isConnected()) {
-					BufferedReader reader = new BufferedReader(
-							new InputStreamReader(
-							soc.getInputStream()));
-					String data = reader.readLine();
+					BufferedReader reader = 
+							new BufferedReader
+							(
+								new InputStreamReader
+								(
+									soc.getInputStream()
+								)
+							);
+					String text = reader.readLine();
 			
-					Platform.runLater(new Runnable() {
-			            @Override
-			            public void run() {
-			            	Label label = new Label();
-			            	label.setPadding(new Insets(5, 5, 5, 5));
-			            	label.setBackground(new Background(new BackgroundFill(Color.CYAN, new CornerRadii(10), Insets.EMPTY)));
-							label.setText(data);
-							HBox hBox=new HBox();
-					        hBox.getChildren().add(label);
-					        hBox.setAlignment(Pos.BASELINE_LEFT);
-					        hBox.setPadding(new Insets(0, 0, 0, 10));
-							vBox.getChildren().add(hBox);
-			            }
-			        });  
+					if (text.contains("EnTeR834")) {
+						text = text.replaceAll("@EnTeR834", "");
+						addLabelToVBox(text, true); 
+					}
+					else {
+						setStatus(text);
+					}
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-				try {
-					server.close();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				server.close();
 			}
 		}).start();
+	}
+	
+	private void setStatus(String text) {
+		Platform.runLater(() -> {
+			status.setText(text);
+		});
+	}
+	
+	private void addLabelToVBox(String text, boolean isServerResponse) {
+		Color color = isServerResponse?Color.CYAN:Color.LIGHTGREEN;
+		Pos pos = isServerResponse?Pos.BASELINE_LEFT:Pos.BASELINE_RIGHT;
+		int padding = isServerResponse?10:0;
+		
+		Platform.runLater(() -> {
+			Label label = new Label();
+        	label.setPadding(new Insets(5, 5, 5, 5));
+        	label.setBackground(new Background(new BackgroundFill(color, new CornerRadii(10), Insets.EMPTY)));
+			label.setText(text);
+			
+			HBox hBox=new HBox();
+	        hBox.getChildren().add(label);
+	        hBox.setAlignment(pos);
+	        hBox.setPadding(new Insets(0, 0, 0, padding));
+	        
+			vBox.getChildren().add(hBox);
+		});  
 	}
 
 	@FXML
@@ -105,37 +115,31 @@ public class ServerController implements Initializable {
 		
 		try {
 			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
-			out.println(text);
+			out.println(text+"@EnTeR834");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			Platform.runLater(new Runnable() {
-	            @Override
-	            public void run() {
-	            	//status.setTextFill(Color.color(255, 0, 0));
-	            	status.setText("Not connected to client yet!");
-	            }
-	        });
+			setStatus("Not connected to client yet!");
 		}
 		
-		Label label = new Label();
-    	label.setPadding(new Insets(5, 5, 5, 5));
-    	label.setBackground(new Background(new BackgroundFill(Color.GREEN, new CornerRadii(10), Insets.EMPTY)));
-		label.setText(text);
-		HBox hBox=new HBox();
-        hBox.getChildren().add(label);
-        hBox.setAlignment(Pos.BASELINE_RIGHT);
-        hBox.setPadding(new Insets(0, 0, 0, 0));
-        vBox.getChildren().add(hBox);
+		addLabelToVBox(text, false);
         
-        textInput.setText("");
+        textInput.setText(""); //Reset input
 	}
-
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		if (textInput==null) return;
+
 		textInput.setOnKeyPressed( event -> {
+			//System.out.println(textInput.getText().toString());
+			if (!TypingThread.typing) {
+				TypingThread tpT = new TypingThread();
+				tpT.setSocket(soc);
+				tpT.start();
+			}
+			
 			if( event.getCode() == KeyCode.ENTER ) {
 			    onSendBtnPressed();
 			}

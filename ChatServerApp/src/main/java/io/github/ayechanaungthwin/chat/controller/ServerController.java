@@ -95,6 +95,7 @@ public class ServerController implements Initializable {
 		
 		Platform.runLater(() -> {
 			Label label = new Label();
+			label.setWrapText(true);
         	label.setPadding(new Insets(5, 5, 5, 5));
         	label.setBackground(new Background(new BackgroundFill(color, new CornerRadii(10), Insets.EMPTY)));
 			label.setText(text);

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client {
+public class Client implements SocketModel {
 
 	private Socket soc;
 	
@@ -12,6 +12,12 @@ public class Client {
 		soc = new Socket("localhost", port);
 	}
 	
+	@Override
+	public String getSocketName() {
+		return this.getClass().getSimpleName();
+	}
+	
+	@Override
 	public Socket getSocket() {
 		return soc;
 	}

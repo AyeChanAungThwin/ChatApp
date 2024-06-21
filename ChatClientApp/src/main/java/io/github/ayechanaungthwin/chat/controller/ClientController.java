@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.ayechanaungthwin.chat.model.Client;
 import io.github.ayechanaungthwin.chat.model.Dto;
-import io.github.ayechanaungthwin.chat.model.TypingThread;
+import io.github.ayechanaungthwin.chat.model.UserInteractionManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -172,7 +172,9 @@ public class ClientController implements Initializable {
         
         textInput.setText("");
 	}
-
+	
+	private UserInteractionManager userInteractionManager = null;
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
@@ -185,11 +187,15 @@ public class ClientController implements Initializable {
 			    return;
 			}
 			
-			if (!TypingThread.typing) {
-				TypingThread tpT = new TypingThread();
-				tpT.setSocket(soc);
-				tpT.start();
-			}
+			if (userInteractionManager==null) {
+				userInteractionManager = new UserInteractionManager(client.getSocketName(), client.getSocket());
+			}	
+			userInteractionManager.interact();	
+//				if (!TypingThread.typing) {
+//					TypingThread tpT = new TypingThread();
+//					tpT.setSocket(soc);
+//					tpT.start();
+//				}
 		});
 	}
 }

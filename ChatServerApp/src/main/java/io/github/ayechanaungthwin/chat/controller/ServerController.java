@@ -1,5 +1,6 @@
 package io.github.ayechanaungthwin.chat.controller;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -10,6 +11,7 @@ import java.util.ResourceBundle;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.ayechanaungthwin.chat.model.Dto;
+import io.github.ayechanaungthwin.chat.model.ImageJsonUtils;
 import io.github.ayechanaungthwin.chat.model.Server;
 import io.github.ayechanaungthwin.chat.model.StringEncryptionUtils;
 import io.github.ayechanaungthwin.chat.model.UserInteractionManager;
@@ -37,6 +39,7 @@ public class ServerController implements Initializable {
 	
 	private final ObjectMapper mapper = new ObjectMapper();
 	private final String ENTER_KEY = "@3N73RK3Y";
+	public final String IMAGE_KEY = "1M463K3Y";
 	public static final String SECRET_KEY = "4Y3CH4N4UN67HW1N";
 	
 	@FXML
@@ -60,6 +63,8 @@ public class ServerController implements Initializable {
 	private Server server;
 	private Socket soc;
 	
+	private Image responseImage = null;
+	
 	public ServerController() {
 		//7imageView.setImage(new Image(this.getClass().getResource("/images/typing.gif").toExternalForm()));
 		new Thread(() -> {
@@ -69,7 +74,11 @@ public class ServerController implements Initializable {
 				  
 				soc = server.getServerSocket().accept();
 				server.setSocket(soc);
-				setStatus("Client is connected...");
+				
+				if (soc.isConnected()) {
+					setStatus("Client is connected...");
+					sendImageThroughSocket();
+				}
 				
 				while(soc.isConnected()) {
 					BufferedReader reader = 
@@ -81,8 +90,18 @@ public class ServerController implements Initializable {
 								)
 							);
 					String text = reader.readLine();
-			
 					String decryptedData = StringEncryptionUtils.decrypt(text, SECRET_KEY);
+					
+					//load image only once
+					if (responseImage==null && decryptedData.contains(IMAGE_KEY)) {
+						decryptedData = decryptedData.replaceAll("@"+IMAGE_KEY, "");
+						BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(decryptedData);
+						Image image = ImageJsonUtils.getImage(bufferedImage);						
+						responseImage = image;
+						
+						continue;
+					}
+			
 					Dto dto = mapper.readValue(decryptedData, Dto.class);
 					if (dto.getMessage().contains(ENTER_KEY)) {
 						text = dto.getMessage().replaceAll("@"+ENTER_KEY, "");
@@ -104,6 +123,23 @@ public class ServerController implements Initializable {
 				server.close();
 			}
 		}).start();
+	}
+	
+	private void sendImageThroughSocket() {
+		try {
+			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
+			
+			//Object to json conversion.
+			String jsonString = ImageJsonUtils.getJson("Server");
+			jsonString+=IMAGE_KEY;
+			
+			//Encrypt String before sending.
+			String encryptedString = StringEncryptionUtils.encrypt(jsonString, SECRET_KEY);
+			out.println(encryptedString);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void showTypingGif(String socketEndName) {
@@ -141,22 +177,34 @@ public class ServerController implements Initializable {
 		});
 	}
 	
-	private void addLabelToVBox(String text, boolean isServerResponse) {
-		Color color = isServerResponse?Color.CYAN:Color.LIGHTGREEN;
-		Pos pos = isServerResponse?Pos.BASELINE_LEFT:Pos.BASELINE_RIGHT;
-		int padding = isServerResponse?10:0;
+	private void addLabelToVBox(String text, boolean isResponse) {
+		Color color = isResponse?Color.CYAN:Color.LIGHTGREEN;
+		Pos pos = isResponse?Pos.BASELINE_LEFT:Pos.BASELINE_RIGHT;
+		int padding = isResponse?10:0;
 		
 		Platform.runLater(() -> {
 			Label label = new Label();
 			label.setWrapText(true);
         	label.setPadding(new Insets(5, 5, 5, 5));
+        	//label.setStyle("-fx-border-color: black;");
         	label.setBackground(new Background(new BackgroundFill(color, new CornerRadii(10), Insets.EMPTY)));
 			label.setText(text);
 			
 			HBox hBox=new HBox();
-	        hBox.getChildren().add(label);
+			if (isResponse) {
+				ImageView imageView = new ImageView();
+				imageView.setImage(responseImage);
+				imageView.setFitWidth(25);
+				imageView.setFitHeight(25);
+				hBox.getChildren().addAll(imageView, label);
+				//HBox.setMargin(imageView, new Insets(2, 2, 2, 2));
+			}
+			else {
+				hBox.getChildren().add(label);
+			}
 	        hBox.setAlignment(pos);
 	        hBox.setPadding(new Insets(0, 0, 0, padding));
+	        HBox.setMargin(label, new Insets(2, 2, 2, 2));
 	        
 			vBox.getChildren().add(hBox);
 		});  

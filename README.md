@@ -11,6 +11,7 @@
 - [X] Multi-threading in Java (Standalone/ThreadPool)
 - [X] Project Lombok (For boilerplate codes.)
 - [X] Jackson (To convert object to json and vice versa.)
+- [X] Encrypt/Decrypt String (Using Apache Commons Crypto library.)
 
 ## Electronics Engineer-cum-J2EE Backend Developer ##
 -  Created by - Aye Chan Aung Thwin

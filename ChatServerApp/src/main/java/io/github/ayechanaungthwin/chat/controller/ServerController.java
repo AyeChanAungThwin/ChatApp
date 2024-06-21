@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.ayechanaungthwin.chat.model.Dto;
 import io.github.ayechanaungthwin.chat.model.Server;
+import io.github.ayechanaungthwin.chat.model.StringEncryptionUtils;
 import io.github.ayechanaungthwin.chat.model.UserInteractionManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -35,6 +36,8 @@ import javafx.scene.text.Font;
 public class ServerController implements Initializable {
 	
 	private final ObjectMapper mapper = new ObjectMapper();
+	private final String ENTER_KEY = "@3N73RK3Y";
+	public static final String SECRET_KEY = "4Y3CH4N4UN67HW1N";
 	
 	@FXML
     private Button btn;
@@ -79,14 +82,15 @@ public class ServerController implements Initializable {
 							);
 					String text = reader.readLine();
 			
-					if (text.contains("EnTeR834")) {
-						text = text.replaceAll("@EnTeR834", "");
+					String decryptedData = StringEncryptionUtils.decrypt(text, SECRET_KEY);
+					Dto dto = mapper.readValue(decryptedData, Dto.class);
+					if (dto.getMessage().contains(ENTER_KEY)) {
+						text = dto.getMessage().replaceAll("@"+ENTER_KEY, "");
 						addLabelToVBox(text, true); 
 						removeHBoxById("typing-gif");
 					}
 					else {
 						//setStatus(text);
-						Dto dto = mapper.readValue(text, Dto.class);
 						if (dto.getMessage().equals("typing")) {
 							showTypingGif(dto.getName());
 						}
@@ -165,7 +169,14 @@ public class ServerController implements Initializable {
 		
 		try {
 			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
-			out.println(text+"@EnTeR834");
+			
+			//Object to json conversion.
+    		ObjectMapper mapper = new ObjectMapper();
+        	String jsonString = mapper.writeValueAsString(new Dto(server.getSocketName(), text+"@"+ENTER_KEY));
+			
+			//Encrypt String before sending.
+			String encryptedString = StringEncryptionUtils.encrypt(jsonString, SECRET_KEY);
+			out.println(encryptedString);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -191,10 +202,10 @@ public class ServerController implements Initializable {
 			    return;
 			}
 			
-		if (userInteractionManager==null) {
-			userInteractionManager = new UserInteractionManager(server.getSocketName(), server.getSocket());
-		}	
-		userInteractionManager.interact();	
+			if (userInteractionManager==null) {
+				userInteractionManager = new UserInteractionManager(server.getSocketName(), server.getSocket());
+			}	
+			userInteractionManager.interact();	
 //			if (!TypingThread.typing) {
 //				TypingThread tpT = new TypingThread();
 //				tpT.setSocket(soc);

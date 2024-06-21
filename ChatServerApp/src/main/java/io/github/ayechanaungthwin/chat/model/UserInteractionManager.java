@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.github.ayechanaungthwin.chat.controller.ServerController;
+
 public class UserInteractionManager {
 
 	private volatile boolean flag;
@@ -37,10 +39,14 @@ public class UserInteractionManager {
         	
         	try {
         		if (!socket.isConnected()) return;
+        		//Object to json conversion.
         		ObjectMapper mapper = new ObjectMapper();
             	PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
     			String jsonString = mapper.writeValueAsString(new Dto(socketName, message));
-    			out.println(jsonString);
+    			
+    			//Encrypt String before sending.
+    			String encryptedString = StringEncryptionUtils.encrypt(jsonString, ServerController.SECRET_KEY);
+    			out.println(encryptedString);
         	}
         	catch (Exception e) {
         		e.printStackTrace();

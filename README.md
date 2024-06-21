@@ -7,7 +7,6 @@
 <img src="images/chat-app.gif" alt="Person with 4 attributes, ER Diagram">
 
 ## About
-- Java Generics
 - [X] Sockets in Java (Server/Client)
 - [X] Multi-threading in Java (Standalone/ThreadPool)
 - [X] Project Lombok (For boilerplate codes.)

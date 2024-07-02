@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.ayechanaungthwin.chat.model.Client;
 import io.github.ayechanaungthwin.chat.model.Dto;
+import io.github.ayechanaungthwin.chat.model.FileUtils;
 import io.github.ayechanaungthwin.chat.model.ImageJsonUtils;
 import io.github.ayechanaungthwin.chat.model.Key;
 import io.github.ayechanaungthwin.chat.model.StringEncryptionUtils;
@@ -146,7 +147,7 @@ public class ClientController implements Initializable {
 			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
 			
 			//Object to json conversion.
-			String json = ImageJsonUtils.getJsonFileChooser(path);
+			String json = ImageJsonUtils.getJson(path);
 			Key extension=path.toLowerCase().contains(".png")?Key.IMAGE_PNG:Key.IMAGE_JPGE;
 			
 			ObjectMapper mapper = new ObjectMapper();
@@ -166,7 +167,7 @@ public class ClientController implements Initializable {
 			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
 			
 			//Object to json conversion.
-			String json = ImageJsonUtils.getJsonForPp("Client");
+			String json = ImageJsonUtils.getJson(FileUtils.getLogoPath());
 			
 			ObjectMapper mapper = new ObjectMapper();
         	String jsonString = mapper.writeValueAsString(new Dto(Key.IMAGE_PROFILE, json));

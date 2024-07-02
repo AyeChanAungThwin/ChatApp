@@ -20,16 +20,10 @@ public class ImageJsonUtils {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 	
-	public static String getJsonForPp(String img) {
-		String path = System.getProperty("user.dir")+"\\src\\main\\resources\\images\\"+img+".png";
-		return getJsonFileChooser(path);
-	}
-	
-	public static String getJsonFileChooser(String img) {
-		String path = img;
+	public static String getJson(String path) {
         File file = new File(path);
         
-        String extension = img.toLowerCase().contains(".png")?"png":"jpeg";
+        String extension = path.toLowerCase().contains(".png")?"png":"jpeg";
         
         String json = null;
         try {
@@ -63,6 +57,7 @@ public class ImageJsonUtils {
 	}
 	
 	
+	@SuppressWarnings("rawtypes")
 	public static Image getImage(BufferedImage img){
 	    //converting to a good type, read about types here: https://openjfx.io/javadoc/13/javafx.graphics/javafx/scene/image/PixelBuffer.html
 	    BufferedImage newImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
@@ -74,7 +69,8 @@ public class ImageJsonUtils {
 
 	    //converting the IntBuffer to an Image, read more about it here: https://openjfx.io/javadoc/13/javafx.graphics/javafx/scene/image/PixelBuffer.html
 	    PixelFormat<IntBuffer> pixelFormat = PixelFormat.getIntArgbPreInstance();
-	    PixelBuffer<IntBuffer> pixelBuffer = new PixelBuffer(newImg.getWidth(), newImg.getHeight(), buffer, pixelFormat);
+	    @SuppressWarnings("unchecked")
+		PixelBuffer<IntBuffer> pixelBuffer = new PixelBuffer(newImg.getWidth(), newImg.getHeight(), buffer, pixelFormat);
 	    return new WritableImage(pixelBuffer);
 	}
 }

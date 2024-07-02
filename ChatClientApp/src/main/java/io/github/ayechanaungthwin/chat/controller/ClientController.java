@@ -2,7 +2,6 @@ package io.github.ayechanaungthwin.chat.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -14,6 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.ayechanaungthwin.chat.model.Client;
 import io.github.ayechanaungthwin.chat.model.Dto;
 import io.github.ayechanaungthwin.chat.model.ImageJsonUtils;
+import io.github.ayechanaungthwin.chat.model.Key;
 import io.github.ayechanaungthwin.chat.model.StringEncryptionUtils;
 import io.github.ayechanaungthwin.chat.model.UserInteractionManager;
 import javafx.application.Platform;
@@ -39,8 +39,6 @@ import javafx.scene.text.Font;
 public class ClientController implements Initializable {
 
 	private final ObjectMapper mapper = new ObjectMapper();
-	private final String ENTER_KEY = "@3N73RK3Y";
-	public final String IMAGE_KEY = "1M463K3Y";
 	public static final String SECRET_KEY = "4Y3CH4N4UN67HW1N";
 	
 	@FXML
@@ -63,7 +61,7 @@ public class ClientController implements Initializable {
 	
 	private Image responseImage = null;
 	
-	public ClientController() throws IOException {
+	public ClientController() {
 		new Thread(() -> {
 			try {
 				client = new Client(7777);
@@ -84,40 +82,83 @@ public class ClientController implements Initializable {
 							);
 					String text = reader.readLine();
 					String decryptedData = StringEncryptionUtils.decrypt(text, SECRET_KEY);
-					
-					//load image only once
-					if (responseImage==null && decryptedData.contains(IMAGE_KEY)) {
-						decryptedData = decryptedData.replaceAll("@"+IMAGE_KEY, "");
-						BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(decryptedData);
-						Image image = ImageJsonUtils.getImage(bufferedImage);						
-						responseImage = image;
-						
-						continue;
-					}
 			
 					Dto dto = mapper.readValue(decryptedData, Dto.class);
-					if (dto.getMessage().contains(ENTER_KEY)) {
-						text = dto.getMessage().replaceAll("@"+ENTER_KEY, "");
+					if (dto.getKey()==Key.IMAGE_PROFILE) {
+						if (responseImage==null) {
+							BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(dto.getMessage());
+							Image image = ImageJsonUtils.getImage(bufferedImage);						
+							responseImage = image;
+						}
+					}
+					else if (dto.getKey()==Key.IMAGE_PNG
+							||dto.getKey()==Key.IMAGE_JPGE) {
+						getImageFromSocketAndShow(dto);
+					}
+					else if (dto.getKey()==Key.ENTER_KEY) {
+						text = dto.getMessage();
 						addLabelToVBox(text, true); 
 						removeHBoxById("typing-gif");
 					}
+					else if (dto.getKey()==Key.PROCESS_TYPING) {
+						showTypingGif(dto.getMessage());
+					}
 					else {
-						//setStatus(text);
-						if (dto.getMessage().equals("typing")) {
-							showTypingGif(dto.getName());
-						}
-						else {
-							removeHBoxById("typing-gif");
-						}
+						removeHBoxById("typing-gif");
 					}
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println(e.getMessage());
 				setStatus("Cannot connect to server!"); 
 				client.close();
 			}
 		}).start();
+	}
+	
+	private void getImageFromSocketAndShow(Dto dto) {
+		Platform.runLater(() -> {
+			BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(dto.getMessage());
+			Image image = ImageJsonUtils.getImage(bufferedImage);						
+			
+			double width = image.getWidth();
+			double height = image.getHeight();
+			double percentage = 0;
+			
+			if (width>190) percentage = 190/width;
+			
+			ImageView imageView = new ImageView();
+			imageView.setImage(image);
+			imageView.setFitWidth(width*percentage);
+			imageView.setFitHeight(height*percentage);
+			
+			HBox hBox=new HBox();
+	        hBox.getChildren().addAll(imageView);
+	        hBox.setAlignment(Pos.BASELINE_LEFT);
+	        hBox.setPadding(new Insets(3, 3, 3, 3));
+	        
+			vBox.getChildren().add(hBox);
+		});
+	}
+	
+	private void sendImageThroughSocketFromFileChooser(String path) {
+		try {
+			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
+			
+			//Object to json conversion.
+			String json = ImageJsonUtils.getJsonFileChooser(path);
+			Key extension=path.toLowerCase().contains(".png")?Key.IMAGE_PNG:Key.IMAGE_JPGE;
+			
+			ObjectMapper mapper = new ObjectMapper();
+        	String jsonString = mapper.writeValueAsString(new Dto(extension, json));
+			
+			//Encrypt String before sending.
+			String encryptedString = StringEncryptionUtils.encrypt(jsonString, SECRET_KEY);
+			out.println(encryptedString);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private void sendImageThroughSocket() {
@@ -125,10 +166,12 @@ public class ClientController implements Initializable {
 			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
 			
 			//Object to json conversion.
-			String jsonString = ImageJsonUtils.getJson("Client");
-			jsonString+=IMAGE_KEY;
+			String json = ImageJsonUtils.getJsonForPp("Client");
 			
-			//Encrypt String before sending.
+			ObjectMapper mapper = new ObjectMapper();
+        	String jsonString = mapper.writeValueAsString(new Dto(Key.IMAGE_PROFILE, json));
+			
+        	//Encrypt String before sending.
 			String encryptedString = StringEncryptionUtils.encrypt(jsonString, SECRET_KEY);
 			out.println(encryptedString);
 		}
@@ -140,7 +183,7 @@ public class ClientController implements Initializable {
 	public void showTypingGif(String socketEndName) {
 		Platform.runLater(() -> {
 			Label label = new Label();
-			label.setText(socketEndName+" is typing : ");
+			label.setText(socketEndName);
 			label.setFont(new Font(10));
 			label.setMaxHeight(20);
 			
@@ -214,8 +257,8 @@ public class ClientController implements Initializable {
 			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
 			
 			//Object to json conversion.
-    		ObjectMapper mapper = new ObjectMapper();
-        	String jsonString = mapper.writeValueAsString(new Dto(client.getSocketName(), text+"@"+ENTER_KEY));
+        	ObjectMapper mapper = new ObjectMapper();
+        	String jsonString = mapper.writeValueAsString(new Dto(Key.ENTER_KEY, text));
 			
 			//Encrypt String before sending.
 			String encryptedString = StringEncryptionUtils.encrypt(jsonString, SECRET_KEY);
@@ -227,7 +270,7 @@ public class ClientController implements Initializable {
 		
 		addLabelToVBox(text, false);
         
-        textInput.setText("");
+        textInput.setText(""); //Reset input
 	}
 	
 	private UserInteractionManager userInteractionManager = null;
@@ -255,4 +298,9 @@ public class ClientController implements Initializable {
 //			}
 		});
 	}
+	
+	@FXML
+    void onAttachFiles() {
+
+    }
 }

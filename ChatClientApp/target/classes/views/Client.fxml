@@ -15,11 +15,12 @@
             <VBox fx:id="vBox" prefHeight="323.0" prefWidth="270.0" />
          </content></ScrollPane>
       <Button fx:id="btn" layoutX="130.0" layoutY="427.0" mnemonicParsing="false" onAction="#onSendBtnPressed" text="Send" />
-      <TextField fx:id="textInput" layoutX="13.0" layoutY="385.0" prefHeight="25.0" prefWidth="288.0" />
+      <TextField fx:id="textInput" layoutX="47.0" layoutY="385.0" prefHeight="25.0" prefWidth="254.0" />
       <HBox alignment="CENTER" prefHeight="40.0" prefWidth="312.0">
          <children>
             <Label fx:id="status" alignment="CENTER" contentDisplay="CENTER" />
          </children>
       </HBox>
+      <Button layoutX="14.0" layoutY="385.0" mnemonicParsing="false" onAction="#onAttachFiles" text="📎" />
    </children>
 </AnchorPane>

@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Dto {
 
-	private String name;
+	private Key key;
 	private String message;
 }

@@ -20,16 +20,23 @@ public class ImageJsonUtils {
 
 	private static final ObjectMapper objectMapper = new ObjectMapper();
 	
-	public static String getJson(String img) {
+	public static String getJsonForPp(String img) {
 		String path = System.getProperty("user.dir")+"\\src\\main\\resources\\images\\"+img+".png";
+		return getJsonFileChooser(path);
+	}
+	
+	public static String getJsonFileChooser(String img) {
+		String path = img;
         File file = new File(path);
+        
+        String extension = img.toLowerCase().contains(".png")?"png":"jpeg";
         
         String json = null;
         try {
         	//Image to byte array conversion
         	BufferedImage bufferedImage = ImageIO.read(file);
             ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ImageIO.write(bufferedImage, "png", output);
+            ImageIO.write(bufferedImage, extension, output);
             byte[] data = output.toByteArray();
              
             json = objectMapper.writeValueAsString(data);
@@ -41,11 +48,13 @@ public class ImageJsonUtils {
 	}
 	
 	public static BufferedImage getBufferedImage(String json) {
+		String extension = json.toLowerCase().contains(".png")?"png":"jpeg";
+		
         BufferedImage image = null;
         try {
             byte[] get = objectMapper.readValue(json, byte[].class);
             image = ImageIO.read(new ByteArrayInputStream(get));
-            ImageIO.write(image, "png", new File("outputImage.png"));
+            ImageIO.write(image, extension, new File("outputImage.png"));
         }
         catch (Exception e) {
         	e.printStackTrace();

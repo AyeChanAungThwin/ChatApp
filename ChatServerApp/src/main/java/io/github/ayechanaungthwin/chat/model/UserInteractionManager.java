@@ -33,7 +33,7 @@ public class UserInteractionManager {
     
     private static boolean interact = false;
     
-    private void pushToSocketOnInteraction(String message) {
+    private void pushToSocketOnInteraction(Key key) {
     	if (interact!=flag) {
         	interact = flag;
         	
@@ -42,7 +42,7 @@ public class UserInteractionManager {
         		//Object to json conversion.
         		ObjectMapper mapper = new ObjectMapper();
             	PrintWriter out = new PrintWriter(this.socket.getOutputStream(), true);
-    			String jsonString = mapper.writeValueAsString(new Dto(socketName, message));
+    			String jsonString = mapper.writeValueAsString(new Dto(key, socketName+key.toString()));
     			
     			//Encrypt String before sending.
     			String encryptedString = StringEncryptionUtils.encrypt(jsonString, ServerController.SECRET_KEY);
@@ -58,10 +58,10 @@ public class UserInteractionManager {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastInteractionTime >= 1500) {
             flag = false;
-            pushToSocketOnInteraction("idle");
+            pushToSocketOnInteraction(Key.PROCESS_NOT_TYPING);
         } else {
             flag = true;
-            pushToSocketOnInteraction("typing");
+            pushToSocketOnInteraction(Key.PROCESS_TYPING);
         }
     }
 

@@ -8,7 +8,7 @@
 
 ## About
 - [X] Sockets in Java (Server/Client)
-- [X] Multi-threading in Java (Standalone/ThreadPool)
+- [X] Multi-threading in Java (Concurrency/ThreadPool)
 - [X] Project Lombok (For boilerplate codes.)
 - [X] Jackson (To convert object to json and vice versa.)
 - [X] Encrypt/Decrypt String (Using Apache Commons Crypto library.)

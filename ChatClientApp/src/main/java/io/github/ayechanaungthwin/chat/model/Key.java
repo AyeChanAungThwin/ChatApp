@@ -1,9 +1,9 @@
 package io.github.ayechanaungthwin.chat.model;
 
 public enum Key {
-	IMAGE_PROFILE,
-	IMAGE_PNG,
-	IMAGE_JPGE,
+	PROFILE_IMAGE,
+	PNG_IMAGE,
+	JPEG_IMAGE,
 	ENTER_KEY,
 	
 	PROCESS_TYPING {
@@ -13,7 +13,7 @@ public enum Key {
 	    }
 	},
 	
-	PROCESS_NOT_TYPING {
+	PROCESS_IDLE_TYPING {
 		@Override
 	    public String toString() {
 	        return " is idle";

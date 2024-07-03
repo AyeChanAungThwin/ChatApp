@@ -39,7 +39,7 @@ public class TypingThread extends Thread {
 			
 			try {
 				PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-				String jsonString = mapper.writeValueAsString(new Dto(Key.PROCESS_NOT_TYPING, "Server is idle"));
+				String jsonString = mapper.writeValueAsString(new Dto(Key.PROCESS_IDLE_TYPING, "Server is idle"));
 				out.println(jsonString);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

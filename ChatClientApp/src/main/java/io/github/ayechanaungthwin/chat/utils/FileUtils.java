@@ -1,4 +1,4 @@
-package io.github.ayechanaungthwin.chat.model;
+package io.github.ayechanaungthwin.chat.utils;
 
 import java.io.File;
 

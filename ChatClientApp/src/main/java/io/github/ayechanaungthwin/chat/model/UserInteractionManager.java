@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.ayechanaungthwin.chat.controller.ClientController;
+import io.github.ayechanaungthwin.chat.utils.StringEncryptionUtils;
 
 public class UserInteractionManager {
 
@@ -58,7 +59,7 @@ public class UserInteractionManager {
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastInteractionTime >= 1500) {
             flag = false;
-            pushToSocketOnInteraction(Key.PROCESS_NOT_TYPING);
+            pushToSocketOnInteraction(Key.PROCESS_IDLE_TYPING);
         } else {
             flag = true;
             pushToSocketOnInteraction(Key.PROCESS_TYPING);

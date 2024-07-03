@@ -1,4 +1,4 @@
-package io.github.ayechanaungthwin.chat.model;
+package io.github.ayechanaungthwin.chat.utils;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -57,7 +57,7 @@ public class ImageJsonUtils {
 	}
 	
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public static Image getImage(BufferedImage img){
 	    //converting to a good type, read about types here: https://openjfx.io/javadoc/13/javafx.graphics/javafx/scene/image/PixelBuffer.html
 	    BufferedImage newImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
@@ -69,7 +69,7 @@ public class ImageJsonUtils {
 
 	    //converting the IntBuffer to an Image, read more about it here: https://openjfx.io/javadoc/13/javafx.graphics/javafx/scene/image/PixelBuffer.html
 	    PixelFormat<IntBuffer> pixelFormat = PixelFormat.getIntArgbPreInstance();
-	    @SuppressWarnings("rawtypes")
+	    @SuppressWarnings("unchecked")
 		PixelBuffer<IntBuffer> pixelBuffer = new PixelBuffer(newImg.getWidth(), newImg.getHeight(), buffer, pixelFormat);
 	    return new WritableImage(pixelBuffer);
 	}

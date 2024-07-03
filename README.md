@@ -16,6 +16,9 @@
 
 ## Concerning your CPU Performance
 ```
+	@FXML
+    	private Label status;
+
 	public ServerController() {
 		new Thread(() -> {
 			try {
@@ -28,8 +31,8 @@
 		}).start();
 	}
 ```
-- Both ServerController and ClientController class, there is a sleep ```Thread``` because this thread ALWAYS runs faster than rendering UI through _Server.fxml_ (i.e., JFX had to read through the file.) and so, initialization of ```status``` field will not completed yet and thus, it will still be null. So, we need to wait for it to finish its initialization.
-- So, according to your CPU's performance, ```NullPointerException``` can be prone. If it happens try adjusting the sleep time to 700 to 1000 ms.
+- Both ServerController and ClientController class, there is a sleep ```Thread```. That's because when the application is executed, this thread ALWAYS runs faster than rendering UI through _Server.fxml_ (i.e., JFX had to read through the file.) and so, initialization of ```status``` field will not completed yet and thus, it will still be ```null```. So, we need to wait for it to finish its initialization.
+- So, according to your CPU's performance, ```NullPointerException``` can be prone. If it happens try adjusting the sleep time from 700 to 1000 ms.
 
 ## Electronics Engineer-cum-J2EE Backend Developer ##
 -  Created by - Aye Chan Aung Thwin

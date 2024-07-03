@@ -31,8 +31,7 @@
 		}).start();
 	}
 ```
-- Both ServerController and ClientController class, there is a sleep ```Thread```. That's because when the application is executed, this thread ALWAYS runs faster than rendering UI through _Server.fxml_ (i.e., JFX had to read through the file.) and so, initialization of ```status``` field will not completed yet and thus, it will still be ```null```. So, we need to wait for it to finish its initialization.
-- So, according to your CPU's performance, ```NullPointerException``` can be prone. If it happens try adjusting the sleep time from 700 to 1000 ms.
+- Both ServerController and ClientController class, there is a ```Thread```. Since this ```Thread``` runs concurrenty with the construction of the constructor, if status is called before the status field has been initialized, a ```NullPointerException``` may occur. So you can wait with the sleep thread until the initialization is done. This is also related to the performance of your CPU, so consider increasing the sleep time from 1000 to 3000ms when necessary.
 
 ## Electronics Engineer-cum-J2EE Backend Developer ##
 -  Created by - Aye Chan Aung Thwin

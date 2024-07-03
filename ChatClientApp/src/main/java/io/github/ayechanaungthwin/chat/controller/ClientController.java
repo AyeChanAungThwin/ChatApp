@@ -62,11 +62,15 @@ public class ClientController implements Initializable {
 				
 				if (soc.isConnected()) {
 					Thread.sleep(300);
-					/* Need to sleep for a little bit because
-					 * this thread ALWAYS runs faster than 
-					 * rendering UI through Server.fxml
-					 * (i.e., JFX had to read through the file.)
-					 * and status field will still be null.*/
+					/* Since this thread runs concurrently 
+					 * with the construction of the constructor, 
+					 * if status is called before the status field 
+					 * has been initialized, a NullPointerException 
+					 * may occur. So you can wait with the sleep thread
+					 * until the initialization is done. 
+					 * This is also related to the performance of your CPU, 
+					 * so consider increasing the sleep time
+					 * when necessary.*/
 					JfxDynamicUiChangerUtils.setStatus(status, "Client has joined to server!");
 					JfxDynamicUiChangerUtils.sendProfileImageThroughSocketOnConnected(soc, SECRET_KEY);
 				}

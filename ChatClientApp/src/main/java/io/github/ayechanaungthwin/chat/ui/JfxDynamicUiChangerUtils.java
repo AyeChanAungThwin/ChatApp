@@ -26,11 +26,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class JfxDynamicUiChangerUtils {
 	
 	//Writer
-	public static void sendProfileImageThroughSocketOnConnected(Socket soc, String SECRET_KEY) {
+	public static void sendProfileImageThroughSocketOnConnected(Socket soc, String SECRET_KEY, String description) {
 		try {
 			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
 			
@@ -38,7 +39,9 @@ public class JfxDynamicUiChangerUtils {
 			String json = ImageJsonUtils.getJson(FileUtils.getLogoPath());
 			
 			ObjectMapper mapper = new ObjectMapper();
-        	String jsonString = mapper.writeValueAsString(new Dto(Key.PROFILE_IMAGE, json));
+			Dto dto = new Dto(Key.PROFILE_IMAGE, json);
+			dto.setDescription(description);
+        	String jsonString = mapper.writeValueAsString(dto);
 			
         	//Encrypt String before sending.
 			String encryptedString = StringEncryptionUtils.encrypt(jsonString, SECRET_KEY);
@@ -187,6 +190,37 @@ public class JfxDynamicUiChangerUtils {
 	        HBox.setMargin(label, new Insets(2, 2, 2, 2));
 	        
 			vBox.getChildren().add(hBox);
+		});  
+	}
+	
+	public static void addJoinedProfileImageToVBox(VBox vBox, Dto dto) {
+		Platform.runLater(() -> {
+			ImageView imageView = new ImageView();
+			imageView.setImage(ClientController.responseImage);
+			imageView.setFitWidth(50);
+			imageView.setFitHeight(50);
+			
+			System.out.println(ClientController.responseImage.getUrl());
+			
+			HBox hBox=new HBox();
+			hBox.getChildren().addAll(imageView);
+	        hBox.setAlignment(Pos.CENTER);
+	        hBox.setPadding(new Insets(0, 0, 0, 0));
+	        HBox.setMargin(imageView, new Insets(2, 2, 2, 2));
+	        
+	        Label label = new Label();
+			label.setWrapText(true);
+        	label.setPadding(new Insets(5, 5, 5, 5));
+        	label.setFont(Font.font("System", FontWeight.BOLD, 12));
+        	label.setTextFill(Color.WHITE);
+        	label.setBackground(new Background(new BackgroundFill(Color.DARKCYAN, new CornerRadii(10), Insets.EMPTY)));
+			label.setText("✔ This chat has connected to "+dto.getDescription()+"!"); //✔🗹
+	        
+	        VBox vB = new VBox();
+	        vB.getChildren().addAll(hBox, label);
+	        vB.setAlignment(Pos.CENTER);
+	        
+			vBox.getChildren().add(vB);
 		});  
 	}
 	

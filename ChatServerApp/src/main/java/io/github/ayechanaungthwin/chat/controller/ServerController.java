@@ -22,10 +22,10 @@ import io.github.ayechanaungthwin.chat.utils.StringEncryptionUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
@@ -44,10 +44,10 @@ public class ServerController implements Initializable {
     private VBox vBox;
 	
 	@FXML
-    private Label status;
+	private TextField textInput;
 	
 	@FXML
-	private TextField textInput;
+    private ImageView profileImageView;
 	
 	private Server server;
 	private Socket soc;
@@ -68,14 +68,14 @@ public class ServerController implements Initializable {
 				 * This is also related to the performance of your CPU, 
 				 * so consider increasing the sleep time
 				 * when necessary.*/
-				JfxDynamicUiChangerUtils.setStatus(status, "Waiting for client...");
+				//JfxDynamicUiChangerUtils.setStatus(status, "Waiting for client...");
 				
 				soc = server.getServerSocket().accept(); 
 				server.setSocket(soc);
 				
 				if (soc.isConnected()) {
-					JfxDynamicUiChangerUtils.setStatus(status, "Client has joined to the chat...");
-					JfxDynamicUiChangerUtils.sendProfileImageThroughSocketOnConnected(soc, SECRET_KEY);
+					//JfxDynamicUiChangerUtils.setStatus(status, "Client has joined to the chat...");
+					JfxDynamicUiChangerUtils.sendProfileImageThroughSocketOnConnected(soc, SECRET_KEY, server.getSocketName());
 				}
 				
 				while(soc.isConnected()) {
@@ -92,6 +92,12 @@ public class ServerController implements Initializable {
 					//JSON to object
 					Dto dto = mapper.readValue(decryptedData, Dto.class);
 					
+//					if (dto.getKey()==Key.PROFILE_IMAGE) {
+//						BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(dto.getMessage());
+//						Image image = ImageJsonUtils.getImage(bufferedImage);
+//						profileImageView.setImage(image);
+//						continue;
+//					}
 					//Using COR to check Keys
 					Handler hdl0 = new ProfileImageHandler();
 					Handler hdl1 = new ImagePngJpegHandler();
@@ -109,7 +115,7 @@ public class ServerController implements Initializable {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				System.out.println(e.getMessage());
-				JfxDynamicUiChangerUtils.setStatus(status, "Cannot connect to server!"); 
+				//JfxDynamicUiChangerUtils.setStatus(status, "Cannot connect to server!"); 
 				server.close();
 			}
 		}).start();
@@ -145,6 +151,9 @@ public class ServerController implements Initializable {
 			}	
 			userInteractionManager.interact();	
 		});
+		
+		//JavaFX auto-scroll down scrollpane
+		scrollPane.vvalueProperty().bind(vBox.heightProperty());
 	}
 	
 	@FXML

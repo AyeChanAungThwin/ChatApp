@@ -22,10 +22,10 @@ import io.github.ayechanaungthwin.chat.utils.StringEncryptionUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 
@@ -44,10 +44,10 @@ public class ClientController implements Initializable {
     private VBox vBox;
 	
 	@FXML
-    private Label status;
+	private TextField textInput;
 	
 	@FXML
-	private TextField textInput;
+    private ImageView profileImageView;
 	
 	private Client client;
 	private Socket soc;
@@ -71,8 +71,8 @@ public class ClientController implements Initializable {
 					 * This is also related to the performance of your CPU, 
 					 * so consider increasing the sleep time
 					 * when necessary.*/
-					JfxDynamicUiChangerUtils.setStatus(status, "Client has joined to server!");
-					JfxDynamicUiChangerUtils.sendProfileImageThroughSocketOnConnected(soc, SECRET_KEY);
+					//JfxDynamicUiChangerUtils.setStatus(status, "Client has joined to server!");
+					JfxDynamicUiChangerUtils.sendProfileImageThroughSocketOnConnected(soc, SECRET_KEY, client.getSocketName());
 				}
 				
 				while(soc.isConnected()) {
@@ -106,7 +106,7 @@ public class ClientController implements Initializable {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				System.out.println(e.getMessage());
-				JfxDynamicUiChangerUtils.setStatus(status, "Cannot connect to server!"); 
+				//JfxDynamicUiChangerUtils.setStatus(status, "Cannot connect to server!"); 
 				client.close();
 			}
 		}).start();
@@ -142,6 +142,9 @@ public class ClientController implements Initializable {
 			}	
 			userInteractionManager.interact();	
 		});
+		
+		//JavaFX auto-scroll down scrollpane
+		scrollPane.vvalueProperty().bind(vBox.heightProperty());
 	}
 	
 	@FXML

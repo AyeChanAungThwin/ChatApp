@@ -2,7 +2,7 @@ package io.github.ayechanaungthwin.chat.cor;
 
 import java.awt.image.BufferedImage;
 
-import io.github.ayechanaungthwin.chat.controller.ServerController;
+import io.github.ayechanaungthwin.chat.controller.MainController;
 import io.github.ayechanaungthwin.chat.model.Dto;
 import io.github.ayechanaungthwin.chat.model.Key;
 import io.github.ayechanaungthwin.chat.ui.JfxDynamicUiChangerUtils;
@@ -19,7 +19,7 @@ public class ProfileImageHandler extends BaseHandler {
 			if (dto.getKey()==Key.PROFILE_IMAGE) {
 				BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(dto.getMessage());
 				Image image = ImageJsonUtils.getImage(bufferedImage);						
-				ServerController.responseImage = image;
+				MainController.responseImage = image;
 				
 				JfxDynamicUiChangerUtils.addJoinedProfileImageToVBox(vBox, dto);
 				return;

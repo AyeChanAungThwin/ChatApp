@@ -7,7 +7,7 @@ import java.net.Socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.github.ayechanaungthwin.chat.controller.ServerController;
+import io.github.ayechanaungthwin.chat.controller.MainController;
 import io.github.ayechanaungthwin.chat.model.Dto;
 import io.github.ayechanaungthwin.chat.model.Key;
 import io.github.ayechanaungthwin.chat.utils.FileUtils;
@@ -117,14 +117,14 @@ public class JfxDynamicUiChangerUtils {
 	    	
 	    	File file = new File(sb.toString());
 	    	
-			ImageView img = new ImageView();
-			img.setFitWidth(25);
-			img.setFitHeight(25);
+	    	ImageView img = new ImageView();
+			img.setFitWidth(80);
+			img.setFitHeight(80);
 			img.setImage(new Image(file.toURI().toString()));
 			
 			HBox hBox=new HBox();
 			hBox.setId("typing-gif");
-	        hBox.getChildren().addAll(label, img);
+			hBox.getChildren().addAll(/* label, */img);
 	        hBox.setAlignment(Pos.BASELINE_LEFT);
 	        hBox.setPadding(new Insets(0, 0, 0, 0));
 	        
@@ -169,6 +169,7 @@ public class JfxDynamicUiChangerUtils {
 	        hBox.getChildren().addAll(stackPane);
 	        hBox.setAlignment(pos);
 	        hBox.setPadding(new Insets(5, 5, 0, 5));
+	        HBox.setMargin(stackPane, new Insets(2, 10, 2, 2));
 	        
 			vBox.getChildren().add(hBox);
 		});
@@ -200,7 +201,7 @@ public class JfxDynamicUiChangerUtils {
 			HBox hBox=new HBox();
 			if (isResponse) {
 				ImageView imageView = new ImageView();
-				imageView.setImage(ServerController.responseImage);
+				imageView.setImage(MainController.responseImage);
 				imageView.setFitWidth(25);
 				imageView.setFitHeight(25);
 				hBox.getChildren().addAll(imageView, label);
@@ -211,7 +212,7 @@ public class JfxDynamicUiChangerUtils {
 			}
 	        hBox.setAlignment(pos);
 	        hBox.setPadding(new Insets(0, 0, 0, padding));
-	        HBox.setMargin(label, new Insets(2, 2, 2, 2));
+	        HBox.setMargin(label, new Insets(2, 20, 2, 2));
 	        
 			vBox.getChildren().add(hBox);
 		});  
@@ -220,7 +221,7 @@ public class JfxDynamicUiChangerUtils {
 	public static void addJoinedProfileImageToVBox(VBox vBox, Dto dto) {
 		Platform.runLater(() -> {
 			ImageView imageView = new ImageView();
-			imageView.setImage(ServerController.responseImage);
+			imageView.setImage(MainController.responseImage);
 			imageView.setFitWidth(50);
 			imageView.setFitHeight(50);
 			

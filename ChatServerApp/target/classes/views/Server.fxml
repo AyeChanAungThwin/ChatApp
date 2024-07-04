@@ -5,15 +5,19 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="312.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.ayechanaungthwin.chat.controller.ServerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="491.0" prefWidth="339.0" style="-fx-background-image: url(&quot;/images/bkg_img.gif&quot;);;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.ayechanaungthwin.chat.controller.MainController">
    <children>
-      <ScrollPane fx:id="scrollPane" layoutX="14.0" layoutY="12.0" prefHeight="362.0" prefWidth="288.0">
+      <ScrollPane fx:id="scrollPane" layoutX="11.0" layoutY="42.0" prefHeight="357.0" prefWidth="317.0" style="-fx-background-color: #161519; -fx-border-insets: 2; -fx-border-color: D3D3D3;">
          <content>
-            <VBox fx:id="vBox" prefHeight="360.0" prefWidth="270.0" />
+            <VBox fx:id="vBox" prefHeight="349.0" prefWidth="309.0" style="-fx-background-color: #161519;" />
          </content></ScrollPane>
-      <Button fx:id="btn" layoutX="130.0" layoutY="427.0" mnemonicParsing="false" onAction="#onSendBtnPressed" text="Send" />
-      <TextField fx:id="textInput" layoutX="47.0" layoutY="385.0" prefHeight="25.0" prefWidth="254.0" />
-      <Button layoutX="14.0" layoutY="385.0" mnemonicParsing="false" onAction="#onAttachFiles" text="📎" />
+      <Button fx:id="btn" layoutX="147.0" layoutY="447.0" mnemonicParsing="false" onAction="#onSendBtnPressed" prefHeight="30.0" prefWidth="45.0" style="-fx-text-fill: #FFF; -fx-background-color: #161519; -fx-border-insets: 2; -fx-border-color: #D3D3D3;" text="➤">
+         <font>
+            <Font size="14.0" />
+         </font></Button>
+      <TextField fx:id="textInput" layoutX="48.0" layoutY="410.0" prefHeight="31.0" prefWidth="281.0" style="-fx-background-color: #161519; -fx-border-insets: 2; -fx-border-color: #D3D3D3; -fx-text-fill: #FFFFFF;" />
+      <Button layoutX="12.0" layoutY="410.0" mnemonicParsing="false" onAction="#onAttachFiles" style="-fx-background-color: #161519; -fx-border-insets: 2; -fx-border-color: #D3D3D3; -fx-text-fill: #FFF;" text="📎" />
    </children>
 </AnchorPane>

@@ -34,7 +34,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class ClientController implements Initializable {
+public class MainController implements Initializable {
 
 	private final ObjectMapper mapper = new ObjectMapper();
 	public static final String SECRET_KEY = "4Y3CH4N4UN67HW1N";
@@ -59,7 +59,7 @@ public class ClientController implements Initializable {
 	
 	public static Image responseImage = null;
 	
-	public ClientController() {
+	public MainController() {
 		new Thread(() -> {
 			try {
 				client = new Client(7777);

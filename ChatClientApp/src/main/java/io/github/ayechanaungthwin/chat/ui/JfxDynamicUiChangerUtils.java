@@ -244,7 +244,7 @@ public class JfxDynamicUiChangerUtils {
         	label.setFont(Font.font("System", FontWeight.BOLD, 12));
         	label.setTextFill(Color.WHITE);
         	label.setBackground(new Background(new BackgroundFill(Color.DARKCYAN, new CornerRadii(10), Insets.EMPTY)));
-			label.setText("✔ "+dto.getExtraData()+" has joined to chat!"); //✔🗹
+			label.setText("✔ You are connected with "+dto.getExtraData()+"!"); //✔🗹
 	        
 	        VBox vB = new VBox();
 	        vB.getChildren().addAll(hBox, label);

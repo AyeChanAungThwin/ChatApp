@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.github.ayechanaungthwin.chat.controller.MainController;
+import io.github.ayechanaungthwin.chat.controller.ServerController;
 import io.github.ayechanaungthwin.chat.ui.JfxDynamicUiChangerUtils;
 import io.github.ayechanaungthwin.chat.utils.StringEncryptionUtils;
 import javafx.scene.control.ScrollPane;
@@ -54,7 +54,7 @@ public class UserInteractionManager {
     			String jsonString = mapper.writeValueAsString(new Dto(key, socketName+key.toString()));
     			
     			//Encrypt String before sending.
-    			String encryptedString = StringEncryptionUtils.encrypt(jsonString, MainController.SECRET_KEY);
+    			String encryptedString = StringEncryptionUtils.encrypt(jsonString, ServerController.SECRET_KEY);
     			out.println(encryptedString);
         	}
         	catch (Exception e) {

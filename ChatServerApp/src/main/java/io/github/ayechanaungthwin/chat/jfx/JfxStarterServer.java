@@ -1,6 +1,6 @@
 package io.github.ayechanaungthwin.chat.jfx;
 
-import io.github.ayechanaungthwin.chat.controller.MainController;
+import io.github.ayechanaungthwin.chat.controller.ServerController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,7 +16,7 @@ public class JfxStarterServer extends Application {
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Server.fxml"));
 	    Parent root = (Parent) loader.load();
 	    
-	    MainController controller = (MainController) loader.getController();
+	    ServerController controller = (ServerController) loader.getController();
 	    controller.setStage(primaryStage);
 	    
 	    Scene scene = new Scene(root);

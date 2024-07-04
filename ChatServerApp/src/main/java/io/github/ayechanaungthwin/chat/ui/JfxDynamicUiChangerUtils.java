@@ -7,7 +7,7 @@ import java.net.Socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.github.ayechanaungthwin.chat.controller.MainController;
+import io.github.ayechanaungthwin.chat.controller.ServerController;
 import io.github.ayechanaungthwin.chat.model.Dto;
 import io.github.ayechanaungthwin.chat.model.Key;
 import io.github.ayechanaungthwin.chat.utils.FileUtils;
@@ -96,7 +96,7 @@ public class JfxDynamicUiChangerUtils {
 	}
 	
 	//Reader
-	public static void addShowTypingGif(VBox vBox, String socketEndName) {
+	public static void addShowTypingGif(ScrollPane scrollPane, VBox vBox, String socketEndName) {
 		Platform.runLater(() -> {
 			Label label = new Label();
 			label.setText(socketEndName);
@@ -118,7 +118,7 @@ public class JfxDynamicUiChangerUtils {
 	    	
 	    	File file = new File(sb.toString());
 	    	
-	    	ImageView img = new ImageView();
+			ImageView img = new ImageView();
 			img.setFitWidth(80);
 			img.setFitHeight(80);
 			img.setImage(new Image(file.toURI().toString()));
@@ -130,17 +130,19 @@ public class JfxDynamicUiChangerUtils {
 	        hBox.setPadding(new Insets(0, 0, 0, 0));
 	        
 			vBox.getChildren().add(hBox);
+			autoScrollDown(scrollPane, vBox);
 		});
 	}
 	
 	// Method to remove HBox by ID
-    public static void removeHBoxById(VBox vBox, String id) {
+    public static void removeHBoxById(ScrollPane scrollPane, VBox vBox, String id) {
         Platform.runLater(() -> {
         	vBox.getChildren().removeIf(node -> node instanceof HBox && id.equals(node.getId()));
+        	autoScrollDown(scrollPane, vBox);
         });
     }
     
-    private static void addJsonImageToVBox(VBox vBox, String jsonImage, boolean isResponse) {
+    private static void addJsonImageToVBox(ScrollPane scrollPane, VBox vBox, String jsonImage, boolean isResponse) {
     	Pos pos = isResponse?Pos.BASELINE_LEFT:Pos.BASELINE_RIGHT;
     	Color color = isResponse?color1:color2;
     	
@@ -173,20 +175,22 @@ public class JfxDynamicUiChangerUtils {
 	        HBox.setMargin(stackPane, new Insets(2, 10, 2, 2));
 	        
 			vBox.getChildren().add(hBox);
+			
+			autoScrollDown(scrollPane, vBox);
 		});
     }
     
-    public static void addImageToVBox(VBox vBox, String path) {
+    public static void addImageToVBox(ScrollPane scrollPane, VBox vBox, String path) {
     	String jsonImage = ImageJsonUtils.getJson(path);
-		addJsonImageToVBox(vBox, jsonImage, false);
+		addJsonImageToVBox(scrollPane, vBox, jsonImage, false);
 	}
 	
-	public static void popImageFromSocketAndAddToVBox(VBox vBox, Dto dto) {
+	public static void popImageFromSocketAndAddToVBox(ScrollPane scrollPane, VBox vBox, Dto dto) {
 		String jsonImage = dto.getMessage();
-		addJsonImageToVBox(vBox, jsonImage, true);
+		addJsonImageToVBox(scrollPane, vBox, jsonImage, true);
 	}
 	
-	public static void addLabelToVBox(VBox vBox, String text, boolean isResponse) {
+	public static void addLabelToVBox(ScrollPane scrollPane, VBox vBox, String text, boolean isResponse) {
 		Color color = isResponse?color1:color2;
 		Pos pos = isResponse?Pos.BASELINE_LEFT:Pos.BASELINE_RIGHT;
 		int padding = isResponse?10:0;
@@ -202,7 +206,7 @@ public class JfxDynamicUiChangerUtils {
 			HBox hBox=new HBox();
 			if (isResponse) {
 				ImageView imageView = new ImageView();
-				imageView.setImage(MainController.responseImage);
+				imageView.setImage(ServerController.responseImage);
 				imageView.setFitWidth(25);
 				imageView.setFitHeight(25);
 				hBox.getChildren().addAll(imageView, label);
@@ -216,13 +220,15 @@ public class JfxDynamicUiChangerUtils {
 	        HBox.setMargin(label, new Insets(2, 20, 2, 2));
 	        
 			vBox.getChildren().add(hBox);
+			
+			autoScrollDown(scrollPane, vBox);
 		});  
 	}
 	
-	public static void addJoinedProfileImageToVBox(VBox vBox, Dto dto) {
+	public static void addJoinedProfileImageToVBox(ScrollPane scrollPane, VBox vBox, Dto dto) {
 		Platform.runLater(() -> {
 			ImageView imageView = new ImageView();
-			imageView.setImage(MainController.responseImage);
+			imageView.setImage(ServerController.responseImage);
 			imageView.setFitWidth(50);
 			imageView.setFitHeight(50);
 			
@@ -245,6 +251,8 @@ public class JfxDynamicUiChangerUtils {
 	        vB.setAlignment(Pos.CENTER);
 	        
 			vBox.getChildren().add(vB);
+			
+			autoScrollDown(scrollPane, vBox);
 		});  
 	}
 	
@@ -256,6 +264,8 @@ public class JfxDynamicUiChangerUtils {
 	}
 	
 	public static void autoScrollDown(ScrollPane scrollPane, VBox vBox) {
-		scrollPane.setVvalue(vBox.getHeight());
+		Platform.runLater(() -> {
+			scrollPane.setVvalue(vBox.getHeight());
+		});
 	}
 }

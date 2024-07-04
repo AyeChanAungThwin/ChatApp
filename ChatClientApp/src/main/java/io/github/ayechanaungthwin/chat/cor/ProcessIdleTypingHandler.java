@@ -13,9 +13,7 @@ public class ProcessIdleTypingHandler extends BaseHandler {
 		// TODO Auto-generated method stub
 		try {
 			if (dto.getKey()==Key.PROCESS_IDLE_TYPING) {
-				JfxDynamicUiChangerUtils.removeHBoxById(vBox, "typing-gif");
-				
-				JfxDynamicUiChangerUtils.autoScrollDown(scrollPane, vBox);
+				JfxDynamicUiChangerUtils.removeHBoxById(scrollPane, vBox, "typing-gif");
 				return;
 			}
 			throw new Exception();

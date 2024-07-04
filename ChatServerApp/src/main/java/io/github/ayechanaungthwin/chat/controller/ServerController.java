@@ -35,7 +35,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class MainController implements Initializable {
+public class ServerController implements Initializable {
 	
 	private final ObjectMapper mapper = new ObjectMapper();
 	public static final String SECRET_KEY = "4Y3CH4N4UN67HW1N";
@@ -60,7 +60,7 @@ public class MainController implements Initializable {
 	
 	public static Image responseImage = null;
 	
-	public MainController() {
+	public ServerController() {
 		new Thread(() -> {
 			try {
 				server = new Server(7777); 
@@ -99,12 +99,6 @@ public class MainController implements Initializable {
 					//JSON to object
 					Dto dto = mapper.readValue(decryptedData, Dto.class);
 					
-//					if (dto.getKey()==Key.PROFILE_IMAGE) {
-//						BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(dto.getMessage());
-//						Image image = ImageJsonUtils.getImage(bufferedImage);
-//						profileImageView.setImage(image);
-//						continue;
-//					}
 					//Using COR to check Keys
 					Handler hdl0 = new ProfileImageHandler();
 					Handler hdl1 = new ImagePngJpegHandler();
@@ -139,7 +133,7 @@ public class MainController implements Initializable {
 		String text = textInput.getText().toString().trim();
 		if (text.length()==0) return;
 		
-		JfxDynamicUiChangerUtils.addLabelToVBox(vBox, text, false);
+		JfxDynamicUiChangerUtils.addLabelToVBox(scrollPane, vBox, text, false);
 		JfxDynamicUiChangerUtils.pushTextToSocket(soc, SECRET_KEY, text);
 		
         textInput.setText(""); //Reset input
@@ -194,9 +188,7 @@ public class MainController implements Initializable {
 		if (selectedFile==null) return;
 		
 		//System.out.println(selectedFile.getAbsolutePath());
-		JfxDynamicUiChangerUtils.addImageToVBox(vBox, selectedFile.getAbsolutePath());
+		JfxDynamicUiChangerUtils.addImageToVBox(scrollPane, vBox, selectedFile.getAbsolutePath());
 		JfxDynamicUiChangerUtils.pushImageToSocketWithFileChooser(soc, SECRET_KEY, selectedFile.getAbsolutePath());
-		
-		JfxDynamicUiChangerUtils.autoScrollDown(scrollPane, vBox);
     }
 }

@@ -13,9 +13,7 @@ public class ProcessTypingHandler extends BaseHandler {
 		// TODO Auto-generated method stub
 		try {
 			if (dto.getKey()==Key.PROCESS_TYPING) {
-				JfxDynamicUiChangerUtils.addShowTypingGif(vBox, dto.getMessage());
-				
-				JfxDynamicUiChangerUtils.autoScrollDown(scrollPane, vBox);
+				JfxDynamicUiChangerUtils.addShowTypingGif(scrollPane, vBox, dto.getMessage());
 				return;
 			}
 			throw new Exception();

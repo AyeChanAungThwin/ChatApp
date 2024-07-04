@@ -14,7 +14,7 @@ public class ImagePngJpegHandler extends BaseHandler {
 		try {
 			if (dto.getKey()==Key.PNG_IMAGE
 					||dto.getKey()==Key.JPEG_IMAGE) {
-				JfxDynamicUiChangerUtils.popImageFromSocketAndAddToVBox(vBox, dto);
+				JfxDynamicUiChangerUtils.popImageFromSocketAndAddToVBox(scrollPane, vBox, dto);
 				
 				JfxDynamicUiChangerUtils.autoScrollDown(scrollPane, vBox);
 				return;

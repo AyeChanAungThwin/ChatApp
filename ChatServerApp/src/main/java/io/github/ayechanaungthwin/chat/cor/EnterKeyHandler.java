@@ -14,10 +14,8 @@ public class EnterKeyHandler extends BaseHandler {
 		try {
 			if (dto.getKey()==Key.ENTER_KEY) {
 				String text = dto.getMessage();
-				JfxDynamicUiChangerUtils.addLabelToVBox(vBox, text, true); 
-				JfxDynamicUiChangerUtils.removeHBoxById(vBox, "typing-gif");
-				
-				JfxDynamicUiChangerUtils.autoScrollDown(scrollPane, vBox);
+				JfxDynamicUiChangerUtils.addLabelToVBox(scrollPane, vBox, text, true); 
+				JfxDynamicUiChangerUtils.removeHBoxById(scrollPane, vBox, "typing-gif");
 				return;
 			}
 			throw new Exception();

@@ -97,11 +97,11 @@ public class ClientController implements Initializable {
 					Dto dto = mapper.readValue(decryptedData, Dto.class);
 					
 					//Using COR to check Keys
-					Handler hdl0 = new ProfileImageHandler();
-					Handler hdl1 = new ImagePngJpegHandler();
-					Handler hdl2 = new EnterKeyHandler();
-					Handler hdl3 = new ProcessTypingHandler();
-					Handler hdl4 = new ProcessIdleTypingHandler();
+					Handler hdl0 = new ProcessTypingHandler();
+					Handler hdl1 = new ProcessIdleTypingHandler();
+					Handler hdl2 = new ProfileImageHandler();
+					Handler hdl3 = new ImagePngJpegHandler();
+					Handler hdl4 = new EnterKeyHandler();
 					
 					hdl0.setSuccessor(hdl1);
 					hdl1.setSuccessor(hdl2);

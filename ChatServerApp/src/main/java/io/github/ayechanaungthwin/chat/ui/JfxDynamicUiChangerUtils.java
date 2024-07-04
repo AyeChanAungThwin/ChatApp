@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.file.Paths;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -27,6 +28,8 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -267,5 +270,30 @@ public class JfxDynamicUiChangerUtils {
 		Platform.runLater(() -> {
 			scrollPane.setVvalue(vBox.getHeight());
 		});
+	}
+	
+	public static MediaPlayer getMediaPlayer(String fileName) {
+		StringBuilder sb = new StringBuilder();
+    	sb.append(System.getProperty("user.dir"));
+    	sb.append(File.separator);
+    	sb.append("src");
+    	sb.append(File.separator);
+    	sb.append("main");
+    	sb.append(File.separator);
+    	sb.append("resources");
+    	sb.append(File.separator);
+    	sb.append("music");
+    	sb.append(File.separator);
+    	sb.append(fileName);
+    	MediaPlayer player = null;
+		try {
+		  Media media = new Media(Paths.get(sb.toString()).toUri().toString());
+		  player = new MediaPlayer(media);
+		  player.setVolume(1);
+		} catch (Exception e) {
+		  e.printStackTrace();
+		} 
+		
+		return player;
 	}
 }

@@ -50,6 +50,13 @@
 	    <version>21</version>
 	</dependency>
 	
+	<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-media -->
+	<dependency>
+	    <groupId>org.openjfx</groupId>
+	    <artifactId>javafx-media</artifactId>
+	    <version>22</version>
+	</dependency>
+	
 	<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 	<dependency>
 	    <groupId>commons-io</groupId>

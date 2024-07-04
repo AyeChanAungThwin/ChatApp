@@ -19,7 +19,6 @@ public class ProcessIdleTypingHandler extends BaseHandler {
 			throw new Exception();
 		}
 		catch (Exception ex) {
-			System.out.println("Hi");
 			super.successor.handleRequest(scrollPane, vBox, dto);
 		}
 	}

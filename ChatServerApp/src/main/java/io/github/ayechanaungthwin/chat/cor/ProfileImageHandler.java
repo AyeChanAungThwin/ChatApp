@@ -16,14 +16,15 @@ public class ProfileImageHandler extends BaseHandler {
 	public void handleRequest(VBox vBox, Dto dto) {
 		// TODO Auto-generated method stub
 		try {
-			if (dto.getKey()!=Key.PROFILE_IMAGE) 
-				throw new Exception();
-			
-			BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(dto.getMessage());
-			Image image = ImageJsonUtils.getImage(bufferedImage);						
-			ServerController.responseImage = image;
-			
-			JfxDynamicUiChangerUtils.addJoinedProfileImageToVBox(vBox, dto);
+			if (dto.getKey()==Key.PROFILE_IMAGE) {
+				BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(dto.getMessage());
+				Image image = ImageJsonUtils.getImage(bufferedImage);						
+				ServerController.responseImage = image;
+				
+				JfxDynamicUiChangerUtils.addJoinedProfileImageToVBox(vBox, dto);
+				return;
+			}
+			throw new Exception();
 		}
 		catch (Exception ex) {
 			super.successor.handleRequest(vBox, dto);

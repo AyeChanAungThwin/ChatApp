@@ -11,10 +11,11 @@ public class ProcessTypingHandler extends BaseHandler {
 	public void handleRequest(VBox vBox, Dto dto) {
 		// TODO Auto-generated method stub
 		try {
-			if (dto.getKey()!=Key.PROCESS_TYPING) 
-				throw new Exception();
-			
-			JfxDynamicUiChangerUtils.showTypingGif(vBox, dto.getMessage());
+			if (dto.getKey()==Key.PROCESS_TYPING) {
+				JfxDynamicUiChangerUtils.addShowTypingGif(vBox, dto.getMessage());
+				return;
+			}
+			throw new Exception();
 		}
 		catch (Exception ex) {
 			super.successor.handleRequest(vBox, dto);

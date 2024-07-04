@@ -1,5 +1,6 @@
 package io.github.ayechanaungthwin.chat.jfx;
 
+import io.github.ayechanaungthwin.chat.controller.ClientController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,11 +13,14 @@ public class JfxStarterClient extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub  
-	    Parent root = FXMLLoader.load(getClass().getResource("/views/Client.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Client.fxml"));
+	    Parent root = (Parent) loader.load();
 	    
-	    primaryStage.setTitle("Client");
-	    
+	    ClientController controller = (ClientController) loader.getController();
+	    controller.setStage(primaryStage);
+
 		Scene scene = new Scene(root);
+	    primaryStage.setTitle("Client");
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(new Image(this.getClass().getResource("/images/Client.png").toExternalForm()));
 		primaryStage.setResizable(false);

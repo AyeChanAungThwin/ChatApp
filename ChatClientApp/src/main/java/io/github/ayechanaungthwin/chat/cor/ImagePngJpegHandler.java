@@ -11,11 +11,12 @@ public class ImagePngJpegHandler extends BaseHandler {
 	public void handleRequest(VBox vBox, Dto dto) {
 		// TODO Auto-generated method stub
 		try {
-			if (dto.getKey()!=Key.PNG_IMAGE
-					||dto.getKey()!=Key.JPEG_IMAGE)
-				throw new Exception();
-			
-			JfxDynamicUiChangerUtils.getImageFromSocketAndShow(vBox, dto);
+			if (dto.getKey()==Key.PNG_IMAGE
+					||dto.getKey()==Key.JPEG_IMAGE) {
+				JfxDynamicUiChangerUtils.popImageFromSocketAndAddToVBox(vBox, dto);
+				return;
+			}
+			throw new Exception();
 		}
 		catch (Exception ex) {
 			this.successor.handleRequest(vBox, dto);

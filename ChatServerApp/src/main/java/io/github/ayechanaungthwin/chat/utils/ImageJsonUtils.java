@@ -5,6 +5,7 @@ import java.awt.image.DataBufferInt;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
@@ -42,13 +43,11 @@ public class ImageJsonUtils {
 	}
 	
 	public static BufferedImage getBufferedImage(String json) {
-		String extension = json.toLowerCase().contains(".png")?"png":"jpeg";
-		
         BufferedImage image = null;
         try {
             byte[] get = objectMapper.readValue(json, byte[].class);
             image = ImageIO.read(new ByteArrayInputStream(get));
-            ImageIO.write(image, extension, new File("outputImage.png"));
+            //ImageIO.write(image, extension, new File("outputImage.png"));
         }
         catch (Exception e) {
         	e.printStackTrace();
@@ -56,8 +55,17 @@ public class ImageJsonUtils {
         return image;
 	}
 	
+	public static void writeImageToFile(BufferedImage image, String filePath) {
+		try {
+			ImageIO.write(image, "png", new File(filePath));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
-	@SuppressWarnings("unchecked")
+	
+	@SuppressWarnings("rawtypes")
 	public static Image getImage(BufferedImage img){
 	    //converting to a good type, read about types here: https://openjfx.io/javadoc/13/javafx.graphics/javafx/scene/image/PixelBuffer.html
 	    BufferedImage newImg = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
@@ -69,7 +77,7 @@ public class ImageJsonUtils {
 
 	    //converting the IntBuffer to an Image, read more about it here: https://openjfx.io/javadoc/13/javafx.graphics/javafx/scene/image/PixelBuffer.html
 	    PixelFormat<IntBuffer> pixelFormat = PixelFormat.getIntArgbPreInstance();
-	    @SuppressWarnings("rawtypes")
+	    @SuppressWarnings("unchecked")
 		PixelBuffer<IntBuffer> pixelBuffer = new PixelBuffer(newImg.getWidth(), newImg.getHeight(), buffer, pixelFormat);
 	    return new WritableImage(pixelBuffer);
 	}

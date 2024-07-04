@@ -11,12 +11,14 @@ public class ProcessIdleTypingHandler extends BaseHandler {
 	public void handleRequest(VBox vBox, Dto dto) {
 		// TODO Auto-generated method stub
 		try {
-			if (dto.getKey()!=Key.PROCESS_IDLE_TYPING) 
-				throw new Exception();
-			
-			JfxDynamicUiChangerUtils.removeHBoxById(vBox, "typing-gif");
+			if (dto.getKey()==Key.PROCESS_IDLE_TYPING) {
+				JfxDynamicUiChangerUtils.removeHBoxById(vBox, "typing-gif");
+				return;
+			}
+			throw new Exception();
 		}
 		catch (Exception ex) {
+			System.out.println("Hi");
 			super.successor.handleRequest(vBox, dto);
 		}
 	}

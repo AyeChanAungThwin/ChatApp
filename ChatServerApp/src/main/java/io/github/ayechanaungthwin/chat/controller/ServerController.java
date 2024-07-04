@@ -1,6 +1,7 @@
 package io.github.ayechanaungthwin.chat.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.URL;
@@ -28,6 +29,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class ServerController implements Initializable {
 	
@@ -75,7 +80,7 @@ public class ServerController implements Initializable {
 				
 				if (soc.isConnected()) {
 					//JfxDynamicUiChangerUtils.setStatus(status, "Client has joined to the chat...");
-					JfxDynamicUiChangerUtils.sendProfileImageThroughSocketOnConnected(soc, SECRET_KEY, server.getSocketName());
+					JfxDynamicUiChangerUtils.pushImageToSocketOnConnected(soc, SECRET_KEY, server.getSocketName());
 				}
 				
 				while(soc.isConnected()) {
@@ -87,6 +92,7 @@ public class ServerController implements Initializable {
 									)
 							);
 					String text = reader.readLine();
+					if (text==null) continue;
 					String decryptedData = StringEncryptionUtils.decrypt(text, SECRET_KEY);
 					
 					//JSON to object
@@ -120,13 +126,19 @@ public class ServerController implements Initializable {
 			}
 		}).start();
 	}
+	
+	private Stage primaryStage;
+	
+	public void setStage(Stage primaryStage) {
+		this.primaryStage = primaryStage;
+	}
 
 	@FXML
 	void onSendBtnPressed() {
 		String text = textInput.getText().toString().trim();
 		if (text.length()==0) return;
 		
-		JfxDynamicUiChangerUtils.sendTextThroughSocket(soc, SECRET_KEY, text);
+		JfxDynamicUiChangerUtils.pushTextToSocket(soc, SECRET_KEY, text);
 		JfxDynamicUiChangerUtils.addLabelToVBox(vBox, text, false);
         
         textInput.setText(""); //Reset input
@@ -158,6 +170,26 @@ public class ServerController implements Initializable {
 	
 	@FXML
     void onAttachFiles() {
+		// Create a FileChooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(
+    			new ExtensionFilter("PNG IMAGE", "*.png"),
+    			new ExtensionFilter("JPG IMAGE", "*.jpg"),
+    			new ExtensionFilter("JPEG IMAGE", "*.jpeg")
+    		);
+        fileChooser.setTitle("Open Image File");
 
+        // Show the FileChooser in a modal window
+        Stage fileChooserStage = new Stage();
+        fileChooserStage.initModality(Modality.WINDOW_MODAL);
+        fileChooserStage.initOwner(primaryStage);
+        
+        // Show the FileChooser and wait for user action
+		File selectedFile = fileChooser.showOpenDialog(fileChooserStage);
+		if (selectedFile==null) return;
+		
+		//System.out.println(selectedFile.getAbsolutePath());
+		JfxDynamicUiChangerUtils.pushImageToSocketWithFileChooser(soc, SECRET_KEY, selectedFile.getAbsolutePath());
+		JfxDynamicUiChangerUtils.addImageToVBox(vBox, selectedFile.getAbsolutePath());
     }
 }

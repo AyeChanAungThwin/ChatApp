@@ -17,12 +17,14 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -30,8 +32,11 @@ import javafx.scene.text.FontWeight;
 
 public class JfxDynamicUiChangerUtils {
 	
+	private static Color color1 = Color.DARKCYAN;
+	private static Color color2 = Color.FORESTGREEN;
+	
 	//Writer
-	public static void sendProfileImageThroughSocketOnConnected(Socket soc, String SECRET_KEY, String description) {
+	public static void pushImageToSocketOnConnected(Socket soc, String SECRET_KEY, String description) {
 		try {
 			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
 			
@@ -52,7 +57,7 @@ public class JfxDynamicUiChangerUtils {
 		}
 	}
 
-	public static void sendImageThroughSocketFromFileChooser(Socket soc, String SECRET_KEY, String path) {
+	public static void pushImageToSocketWithFileChooser(Socket soc, String SECRET_KEY, String path) {
 		try {
 			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
 			
@@ -72,7 +77,7 @@ public class JfxDynamicUiChangerUtils {
 		}
 	}
 	
-	public static void sendTextThroughSocket(Socket soc, String SECRET_KEY, String text) {
+	public static void pushTextToSocket(Socket soc, String SECRET_KEY, String text) {
 		try {
 			PrintWriter out = new PrintWriter(soc.getOutputStream(), true);
 			
@@ -90,7 +95,7 @@ public class JfxDynamicUiChangerUtils {
 	}
 	
 	//Reader
-	public static void showTypingGif(VBox vBox, String socketEndName) {
+	public static void addShowTypingGif(VBox vBox, String socketEndName) {
 		Platform.runLater(() -> {
 			Label label = new Label();
 			label.setText(socketEndName);
@@ -133,10 +138,13 @@ public class JfxDynamicUiChangerUtils {
         	vBox.getChildren().removeIf(node -> node instanceof HBox && id.equals(node.getId()));
         });
     }
-	
-	public static void getImageFromSocketAndShow(VBox vBox, Dto dto) {
-		Platform.runLater(() -> {
-			BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(dto.getMessage());
+    
+    private static void addJsonImageToVBox(VBox vBox, String jsonImage, boolean isResponse) {
+    	Pos pos = isResponse?Pos.BASELINE_LEFT:Pos.BASELINE_RIGHT;
+    	Color color = isResponse?color1:color2;
+    	
+    	Platform.runLater(() -> {
+			BufferedImage bufferedImage = ImageJsonUtils.getBufferedImage(jsonImage);
 			Image image = ImageJsonUtils.getImage(bufferedImage);						
 			
 			double width = image.getWidth();
@@ -144,24 +152,39 @@ public class JfxDynamicUiChangerUtils {
 			double percentage = 0;
 			
 			//Set every images the same width/height for display
-			if (width>190) percentage = 190/width;
+			if (width>180) percentage = 180/width;
 			
 			ImageView imageView = new ImageView();
 			imageView.setImage(image);
 			imageView.setFitWidth(width*percentage);
 			imageView.setFitHeight(height*percentage);
+			imageView.setEffect(new DropShadow(5, Color.BLACK));
+			
+			StackPane stackPane = new StackPane();
+			stackPane.getChildren().add(imageView);
+			stackPane.setBackground(new Background(new BackgroundFill(color, new CornerRadii(5), new Insets(5, 5, 5, 5))));
 			
 			HBox hBox=new HBox();
-	        hBox.getChildren().addAll(imageView);
-	        hBox.setAlignment(Pos.BASELINE_LEFT);
+	        hBox.getChildren().addAll(stackPane);
+	        hBox.setAlignment(pos);
 	        hBox.setPadding(new Insets(5, 5, 0, 5));
 	        
 			vBox.getChildren().add(hBox);
 		});
+    }
+    
+    public static void addImageToVBox(VBox vBox, String path) {
+    	String jsonImage = ImageJsonUtils.getJson(path);
+		addJsonImageToVBox(vBox, jsonImage, false);
+	}
+	
+	public static void popImageFromSocketAndAddToVBox(VBox vBox, Dto dto) {
+		String jsonImage = dto.getMessage();
+		addJsonImageToVBox(vBox, jsonImage, true);
 	}
 	
 	public static void addLabelToVBox(VBox vBox, String text, boolean isResponse) {
-		Color color = isResponse?Color.CYAN:Color.LIGHTGREEN;
+		Color color = isResponse?color1:color2;
 		Pos pos = isResponse?Pos.BASELINE_LEFT:Pos.BASELINE_RIGHT;
 		int padding = isResponse?10:0;
 		
@@ -199,8 +222,6 @@ public class JfxDynamicUiChangerUtils {
 			imageView.setImage(ServerController.responseImage);
 			imageView.setFitWidth(50);
 			imageView.setFitHeight(50);
-			
-			System.out.println(ServerController.responseImage.getUrl());
 			
 			HBox hBox=new HBox();
 			hBox.getChildren().addAll(imageView);

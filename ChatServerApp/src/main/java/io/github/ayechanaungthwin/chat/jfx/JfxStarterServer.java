@@ -1,5 +1,6 @@
 package io.github.ayechanaungthwin.chat.jfx;
 
+import io.github.ayechanaungthwin.chat.controller.ServerController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,11 +13,14 @@ public class JfxStarterServer extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub  
-	    Parent root = FXMLLoader.load(getClass().getResource("/views/Server.fxml"));
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Server.fxml"));
+	    Parent root = (Parent) loader.load();
 	    
+	    ServerController controller = (ServerController) loader.getController();
+	    controller.setStage(primaryStage);
+	    
+	    Scene scene = new Scene(root);
 	    primaryStage.setTitle("Server");
-	    
-		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(new Image(this.getClass().getResource("/images/Server.png").toExternalForm()));
 		primaryStage.setResizable(false);

@@ -5,6 +5,7 @@ import java.awt.image.DataBufferInt;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
@@ -42,18 +43,25 @@ public class ImageJsonUtils {
 	}
 	
 	public static BufferedImage getBufferedImage(String json) {
-		String extension = json.toLowerCase().contains(".png")?"png":"jpeg";
-		
         BufferedImage image = null;
         try {
             byte[] get = objectMapper.readValue(json, byte[].class);
             image = ImageIO.read(new ByteArrayInputStream(get));
-            ImageIO.write(image, extension, new File("outputImage.png"));
+            //ImageIO.write(image, extension, new File("outputImage.png"));
         }
         catch (Exception e) {
         	e.printStackTrace();
         }
         return image;
+	}
+	
+	public static void writeImageToFile(BufferedImage image, String filePath) {
+		try {
+			ImageIO.write(image, "png", new File(filePath));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	

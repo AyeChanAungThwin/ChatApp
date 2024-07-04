@@ -163,6 +163,7 @@ public class JfxDynamicUiChangerUtils {
 			StackPane stackPane = new StackPane();
 			stackPane.getChildren().add(imageView);
 			stackPane.setBackground(new Background(new BackgroundFill(color, new CornerRadii(5), new Insets(5, 5, 5, 5))));
+			stackPane.setStyle("-fx-padding: 10;");
 			
 			HBox hBox=new HBox();
 	        hBox.getChildren().addAll(stackPane);

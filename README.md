@@ -1,10 +1,19 @@
 # ChatApp (JFX)
+
+## How it looks like
+<img src="images/chat-app.gif" alt="Chat App Animation Gif">
+
 ## Abstract
 > This is the test purpose JFX project that can directly runs as "Java Application" on Maven project.
 > So, you need to set configuration if you wanna run it as JFX.
 
-## How it looks like
-<img src="images/chat-app.gif" alt="Person with 4 attributes, ER Diagram">
+## How to test
+- Open command or terminal.
+- Type ```git clone https://github.com/AyeChanAungThwin/ChatApp``` and press enter.
+- Firstly, Run Server side App. It will wait for the client to join the Server Socket.
+- ```/ChatServerApp/src/main/java/io/github/ayechanaungthwin/chat/App.java```
+- And then, run the client side App. It will go join the Server Socket.
+- Finally, you can start chatting from both of the Apps.
 
 ## About
 - [X] Sockets in Java (Server/Client)
@@ -16,9 +25,6 @@
 
 ## Concerning your CPU Performance
 ```
-	@FXML
-    	private Label status;
-
 	public ServerController() {
 		new Thread(() -> {
 			try {
@@ -31,7 +37,7 @@
 		}).start();
 	}
 ```
-- Both ServerController and ClientController class, there is a ```Thread```. Since this ```Thread``` runs concurrenty with the construction of the constructor, if ```status``` field is called before the ```status``` field has been initialized, a ```NullPointerException``` may occur. So you can wait with the sleep thread until the initialization is done. This is also related to the performance of your CPU, so consider increasing the sleep time from 1000 to 3000ms when necessary.
+- Both ServerController and ClientController class, there is a ```Thread```. Since this ```Thread``` runs concurrenty with the construction of the constructor, if the _Data Binding of fields_ under ```@FXML``` has not been initialized yet, a ```NullPointerException``` may occur. So you can wait with the sleep thread until the initialization is done. This is also related to the performance of your CPU, so consider increasing the sleep time from 1000 to 3000ms when necessary.
 
 ## Electronics Engineer-cum-J2EE Backend Developer ##
 -  Created by - Aye Chan Aung Thwin

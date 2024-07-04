@@ -10,8 +10,7 @@
 ## How to test
 - Open command or terminal.
 - Type ```git clone https://github.com/AyeChanAungThwin/ChatApp``` and press enter.
-- Firstly, Run Server side App. It will wait for the client to join the Server Socket.
-- ```/ChatServerApp/src/main/java/io/github/ayechanaungthwin/chat/App.java```
+- Firstly, Run Server side App. It will wait for the client to join the Server Socket: ```/ChatServerApp/src/main/java/io/github/ayechanaungthwin/chat/App.java```
 - And then, run the client side App. It will go join the Server Socket.
 - Finally, you can start chatting from both of the Apps.
 

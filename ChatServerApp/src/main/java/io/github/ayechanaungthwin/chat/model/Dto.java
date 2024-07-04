@@ -14,7 +14,7 @@ public class Dto {
 	
 	@Getter 
 	@Setter
-	private String description;
+	private Object extraData;
 	
 	public Dto(Key key, String message) {
 		this.key = key;

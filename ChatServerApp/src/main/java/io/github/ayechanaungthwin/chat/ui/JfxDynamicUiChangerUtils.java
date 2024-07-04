@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,7 +46,7 @@ public class JfxDynamicUiChangerUtils {
 			
 			ObjectMapper mapper = new ObjectMapper();
 			Dto dto = new Dto(Key.PROFILE_IMAGE, json);
-			dto.setDescription(description);
+			dto.setExtraData(description);
         	String jsonString = mapper.writeValueAsString(dto);
 			
         	//Encrypt String before sending.
@@ -237,7 +238,7 @@ public class JfxDynamicUiChangerUtils {
         	label.setFont(Font.font("System", FontWeight.BOLD, 12));
         	label.setTextFill(Color.WHITE);
         	label.setBackground(new Background(new BackgroundFill(Color.DARKCYAN, new CornerRadii(10), Insets.EMPTY)));
-			label.setText("✔ "+dto.getDescription()+" has joined to chat!"); //✔🗹
+			label.setText("✔ "+dto.getExtraData()+" has joined to chat!"); //✔🗹
 	        
 	        VBox vB = new VBox();
 	        vB.getChildren().addAll(hBox, label);
@@ -252,5 +253,9 @@ public class JfxDynamicUiChangerUtils {
 		Platform.runLater(() -> {
 			status.setText(text);
 		});
+	}
+	
+	public static void autoScrollDown(ScrollPane scrollPane, VBox vBox) {
+		scrollPane.setVvalue(vBox.getHeight());
 	}
 }

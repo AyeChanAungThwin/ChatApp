@@ -9,7 +9,10 @@ import java.util.concurrent.TimeUnit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.ayechanaungthwin.chat.controller.MainController;
+import io.github.ayechanaungthwin.chat.ui.JfxDynamicUiChangerUtils;
 import io.github.ayechanaungthwin.chat.utils.StringEncryptionUtils;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
 
 public class UserInteractionManager {
 
@@ -17,10 +20,15 @@ public class UserInteractionManager {
     private final ScheduledExecutorService scheduler;
     private long lastInteractionTime;
     
+    private ScrollPane scrollPane;
+    private VBox vBox;
+    
     private String socketName;
     private Socket socket;
     
-    public UserInteractionManager(String socketName, Socket socket) {
+    public UserInteractionManager(ScrollPane scrollPane, VBox vBox, String socketName, Socket socket) {
+    	this.scrollPane = scrollPane;
+    	this.vBox = vBox;
     	this.socketName = socketName;
     	this.socket = socket;
     	
@@ -60,9 +68,11 @@ public class UserInteractionManager {
         if (currentTime - lastInteractionTime >= 1500) {
             flag = false;
             pushToSocketOnInteraction(Key.PROCESS_IDLE_TYPING);
+            JfxDynamicUiChangerUtils.autoScrollDown(scrollPane, vBox);
         } else {
             flag = true;
             pushToSocketOnInteraction(Key.PROCESS_TYPING);
+            JfxDynamicUiChangerUtils.autoScrollDown(scrollPane, vBox);
         }
     }
 

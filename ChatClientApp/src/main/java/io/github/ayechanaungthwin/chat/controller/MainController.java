@@ -24,15 +24,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.FileChooser.ExtensionFilter;
 
 public class MainController implements Initializable {
 
@@ -107,7 +108,7 @@ public class MainController implements Initializable {
 					hdl2.setSuccessor(hdl3);
 					hdl3.setSuccessor(hdl4);
 					
-					hdl0.handleRequest(vBox, dto);
+					hdl0.handleRequest(scrollPane, vBox, dto);
 				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -129,10 +130,13 @@ public class MainController implements Initializable {
 		String text = textInput.getText().toString().trim();
 		if (text.length()==0) return;
 		
-		JfxDynamicUiChangerUtils.pushTextToSocket(soc, SECRET_KEY, text);
 		JfxDynamicUiChangerUtils.addLabelToVBox(vBox, text, false);
-        
+		JfxDynamicUiChangerUtils.pushTextToSocket(soc, SECRET_KEY, text);
+		
         textInput.setText(""); //Reset input
+        
+        //JavaFX auto-scroll down
+        JfxDynamicUiChangerUtils.autoScrollDown(scrollPane, vBox);
 	}
 	
 	private UserInteractionManager userInteractionManager = null;
@@ -150,13 +154,14 @@ public class MainController implements Initializable {
 			
 			//Typing Thread
 			if (userInteractionManager==null) {
-				userInteractionManager = new UserInteractionManager(client.getSocketName(), client.getSocket());
+				userInteractionManager = new UserInteractionManager(scrollPane, vBox, client.getSocketName(), client.getSocket());
 			}	
 			userInteractionManager.interact();	
 		});
 		
-		//JavaFX auto-scroll down scrollpane
-		scrollPane.vvalueProperty().bind(vBox.heightProperty());
+		// Customize scroll bars
+        scrollPane.setHbarPolicy(ScrollBarPolicy.NEVER); // Hide horizontal scroll bar
+        scrollPane.setVbarPolicy(ScrollBarPolicy.NEVER); // Hide vertical scroll bar
 	}
 	
 	@FXML
@@ -180,7 +185,9 @@ public class MainController implements Initializable {
 		if (selectedFile==null) return;
 		
 		//System.out.println(selectedFile.getAbsolutePath());
-		JfxDynamicUiChangerUtils.pushImageToSocketWithFileChooser(soc, SECRET_KEY, selectedFile.getAbsolutePath());
 		JfxDynamicUiChangerUtils.addImageToVBox(vBox, selectedFile.getAbsolutePath());
+		JfxDynamicUiChangerUtils.pushImageToSocketWithFileChooser(soc, SECRET_KEY, selectedFile.getAbsolutePath());
+		
+		JfxDynamicUiChangerUtils.autoScrollDown(scrollPane, vBox);
     }
 }

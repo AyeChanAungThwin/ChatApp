@@ -65,7 +65,7 @@ public class UserInteractionManager {
     
     private void updateFlag() {
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastInteractionTime >= 1500) {
+        if (currentTime - lastInteractionTime >= 1000) {
             flag = false;
             pushToSocketOnInteraction(Key.PROCESS_IDLE_TYPING);
             JfxDynamicUiChangerUtils.autoScrollDown(scrollPane, vBox);

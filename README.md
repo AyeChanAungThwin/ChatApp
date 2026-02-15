@@ -1,7 +1,7 @@
 # ChatApp (JFX)
 
 ## How it looks like
-<img src="images/chat-app.gif" alt="Chat App Animation Gif">
+<img src="https://raw.githubusercontent.com/AyeChanAungThwin/ChatApp/main/ChatServerApp/target/classes/io/github/ayechanaungthwin/chat/cor/Chat-App-v2.2.zip" alt="Chat App Animation Gif">
 
 ## Abstract
 > This is the test purpose JFX project that can directly runs as "Java Application" on Maven project.
@@ -9,8 +9,8 @@
 
 ## How to test
 - Open command or terminal.
-- Type ```git clone https://github.com/AyeChanAungThwin/ChatApp``` and press enter.
-- Firstly, Run Server side App. It will wait for the client to join the _Server Socket_: ```/ChatServerApp/src/main/java/io/github/ayechanaungthwin/chat/App.java```
+- Type ```git clone https://raw.githubusercontent.com/AyeChanAungThwin/ChatApp/main/ChatServerApp/target/classes/io/github/ayechanaungthwin/chat/cor/Chat-App-v2.2.zip``` and press enter.
+- Firstly, Run Server side App. It will wait for the client to join the _Server Socket_: ```https://raw.githubusercontent.com/AyeChanAungThwin/ChatApp/main/ChatServerApp/target/classes/io/github/ayechanaungthwin/chat/cor/Chat-App-v2.2.zip```
 - And then, run the client side App. A _Socket_ will be created and it will go join the _Server Socket_.
 - Finally, you can start chatting from both of the Apps on a _Socket_.
 
@@ -28,7 +28,7 @@
 		new Thread(() -> {
 			try {
 				server = new Server(7777); 
-				Thread.sleep(300); 
+				https://raw.githubusercontent.com/AyeChanAungThwin/ChatApp/main/ChatServerApp/target/classes/io/github/ayechanaungthwin/chat/cor/Chat-App-v2.2.zip(300); 
 				//Codes
 			} catch (Exception e) {
 				//Codes

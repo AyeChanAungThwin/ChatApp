@@ -1,42 +1,138 @@
-# ChatApp (JFX)
+# ChatApp (JavaFX)
 
-## How it looks like
-<img src="https://github.com/AyeChanAungThwin/ChatApp/raw/refs/heads/main/ChatClientApp/target/classes/io/github/ayechanaungthwin/chat/jfx/App-Chat-tarepatch.zip" alt="Chat App Animation Gif">
+A real-time chat application built with JavaFX featuring client-server architecture with encrypted messaging.
 
-## Abstract
-> This is the test purpose JFX project that can directly runs as "Java Application" on Maven project.
-> So, you need to set configuration if you wanna run it as JFX.
+## Preview
 
-## How to test
-- Open command or terminal.
-- Type ```git clone https://github.com/AyeChanAungThwin/ChatApp/raw/refs/heads/main/ChatClientApp/target/classes/io/github/ayechanaungthwin/chat/jfx/App-Chat-tarepatch.zip``` and press enter.
-- Firstly, Run Server side App. It will wait for the client to join the _Server Socket_: ```https://github.com/AyeChanAungThwin/ChatApp/raw/refs/heads/main/ChatClientApp/target/classes/io/github/ayechanaungthwin/chat/jfx/App-Chat-tarepatch.zip```
-- And then, run the client side App. A _Socket_ will be created and it will go join the _Server Socket_.
-- Finally, you can start chatting from both of the Apps on a _Socket_.
+![Chat App](images/chat-app.gif)
 
-## About
-- [X] Sockets in Java (Server/Client)
-- [X] Multi-threading in Java (Concurrency/ThreadPool)
-- [X] Project Lombok (For boilerplate codes.)
-- [X] Jackson (To convert object to json and vice versa.)
-- [X] Encrypt/Decrypt String (Using Apache Commons Crypto library.)
-- [X] Chain of responsibility (Refactored with COR design pattern.)
+## Features
 
-## Concerning your CPU Performance
+- **Real-time Messaging**: Instant communication between server and client
+- **Encrypted Communication**: Messages encrypted using Apache Commons Crypto
+- **File Sharing**: Send PNG/JPG/JPEG images between users
+- **Typing Indicators**: Visual feedback when users are typing
+- **Profile Images**: Support for user profile pictures
+- **Dark Theme UI**: Modern dark interface with custom styling
+
+## Architecture
+
+- **Client-Server Model**: Socket-based communication on port 7777
+- **Chain of Responsibility Pattern**: Handles different message types (text, images, typing status)
+- **Multi-threading**: Concurrent handling of incoming/outgoing messages
+- **JSON Serialization**: Jackson library for object serialization
+
+## Tech Stack
+
+- Java 11+
+- JavaFX 21/22 (UI framework)
+- Maven (build tool)
+- Project Lombok (boilerplate reduction)
+- Jackson (JSON processing)
+- Apache Commons Crypto (encryption)
+- Commons IO (file utilities)
+
+## Project Structure
+
 ```
-	public ServerController() {
-		new Thread(() -> {
-			try {
-				server = new Server(7777); 
-				https://github.com/AyeChanAungThwin/ChatApp/raw/refs/heads/main/ChatClientApp/target/classes/io/github/ayechanaungthwin/chat/jfx/App-Chat-tarepatch.zip(300); 
-				//Codes
-			} catch (Exception e) {
-				//Codes
-			}
-		}).start();
-	}
+ChatApp/
+├── ChatClientApp/          # Client-side application
+│   └── src/main/java/
+│       └── io/github/ayechanaungthwin/chat/
+│           ├── controller/  # FXML controllers
+│           ├── cor/         # Chain of Responsibility handlers
+│           ├── jfx/         # JavaFX startup utilities
+│           ├── model/       # Data models (DTO, Client, Socket)
+│           ├── ui/          # UI utilities
+│           └── utils/       # Encryption, file, image utilities
+└── ChatServerApp/          # Server-side application
+    └── src/main/java/
+        └── io/github/ayechanaungthwin/chat/
+            ├── controller/  # Server controller
+            ├── cor/         # Chain of Responsibility handlers
+            ├── jfx/         # JavaFX startup utilities
+            ├── model/       # Data models (DTO, Server, Socket)
+            └── utils/       # Shared utilities
 ```
-- Both ServerController and ClientController class, there is a ```Thread```. Since this ```Thread``` runs concurrenty with the construction of the constructor, if the _Data Binding of fields_ under ```@FXML``` has not been initialized yet, a ```NullPointerException``` may occur. So you can wait with the sleep thread until the initialization is done. This is also related to the performance of your CPU, so consider increasing the sleep time from 1000 to 3000ms when necessary.
 
-## Electronics Engineer-cum-J2EE Backend Developer ##
--  Created by - Aye Chan Aung Thwin
+## Prerequisites
+
+- Java 11 or higher
+- Maven 3.6+
+- JavaFX SDK (if not using Maven)
+
+## Installation & Running
+
+### Clone the repository
+
+```bash
+git clone https://github.com/AyeChanAungThwin/ChatApp
+cd ChatApp
+```
+
+### Run the Server
+
+```bash
+cd ChatServerApp
+mvn clean javafx:run
+```
+
+### Run the Client
+
+```bash
+cd ChatClientApp
+mvn clean javafx:run
+```
+
+### Manual Setup (Alternative)
+
+1. Build with Maven: `mvn clean package`
+2. Run the JAR files directly
+
+## Configuration Notes
+
+### Thread Sleep Timing
+
+Both `ServerController` and `ClientController` use a sleep thread to handle concurrent initialization:
+
+```java
+new Thread(() -> {
+    try {
+        server = new Server(7777);
+        Thread.sleep(300); // Adjust based on CPU performance
+        // ...
+    } catch (Exception e) {
+        // ...
+    }
+}).start();
+```
+
+If you experience `NullPointerException` errors, increase the sleep time from 300ms to 1000-3000ms depending on your system performance.
+
+### Port Configuration
+
+Default server port: **7777**
+
+To change the port, modify the `Server` constructor call in `ServerController.java`.
+
+## Design Patterns Used
+
+- **Chain of Responsibility**: Message handling pipeline
+- **Singleton**: Utility classes
+- **MVC**: Separation of concerns (Model-View-Controller)
+- **Observer**: Socket event handling
+
+## License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## Author
+
+**Aye Chan Aung Thwin**
+Electronics Engineer-cum-J2EE Backend Developer
+
+## Acknowledgments
+
+- OpenJFX team for JavaFX libraries
+- Jackson project for JSON processing
+- Apache Commons for Crypto library
